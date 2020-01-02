@@ -50,7 +50,7 @@ namespace dotnet_demoapp.Controllers
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "/bin/bash",
+                    FileName = "/bin/sh",
                     Arguments = $"-c \"{escapedArgs}\"",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
