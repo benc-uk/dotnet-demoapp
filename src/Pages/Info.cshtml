@@ -1,0 +1,47 @@
+@page
+@model SystemInfoModel
+@{
+    ViewData["Title"] = "System Info";
+}
+<div class="card mb-3">
+  <div class="card-header bg-info text-white"> <i class="fas fa-info-circle"></i> System Information</div>
+  <div class="card-body">
+    <h3 class="card-title">Basic Details</h3>
+    <p class="card-text">
+      <table class="table table-hover table-striped">
+        <tr><td><i class="fa fa-cube"></i>&nbsp; Containerized:</td> 
+          @if (Model.isInContainer) {
+              <td>Looks like we're running in a Docker container! &#x1F604;</td>
+          } else {
+              <td>Not running as a Docker container &#x1F622;</td>
+          }
+        </tr>
+        <tr><td><i class="fa fa-project-diagram"></i>&nbsp; Kubernetes:</td> 
+          @if (Model.isInKubernetes) {
+              <td>We're also running in a Kubernetes pod! &#x1f44d;</td>
+          } else {
+              <td>Not running in Kubernetes &#x1F622;</td>
+          }
+        </tr>
+        <tr><td><i class="fa fa-home"></i>&nbsp; Hostname:</td> <td>@Model.hostname</td></tr>
+        <tr><td><i class="fas fa-cogs"></i>&nbsp; OS Details:</td> <td>@Model.osDesc</td></tr>
+        <tr><td><i class="fa fa-microchip"></i>&nbsp; Architecture:</td> <td>@Model.osArch - @Model.processorCount cores</td></tr>
+        <tr><td><i class="fab fa-codepen"></i>&nbsp; Framework:</td> <td>@Model.framework</td></tr>
+        <tr><td><i class="fas fa-memory"></i>&nbsp; Memory:</td> <td>@Model.workingSet MB / @String.Format("{0,12:n} MB", Model.physicalMem)</td></tr>
+      </table>
+
+      <hr>
+
+      <h3 class="card-title">Environment Variables</h3>
+      <div class="envtable">
+        <table class="table-sm table-hover table-striped">
+          @foreach(KeyValuePair<string, string> var in @Model.envVars) { 
+            @if(var.Key == "PATH") continue;
+            <tr> <td class="text-light"> @var.Key </td> <td class="envvars"> @var.Value </td> </tr>
+          } 
+        </table>
+      </div>
+
+    </p> 
+  </div>
+</div>

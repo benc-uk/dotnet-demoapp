@@ -1,0 +1,18 @@
+﻿@page
+@{
+    ViewData["Title"] = "Tools";
+}
+<div class="card mb-3">
+  <div class="card-header bg-info text-white"> <i class="fas fa-wrench"></i> Tools</div>
+  <div class="card-body">
+    <p>
+      <a class="btn btn-warning btn-lg" href="/load">CPU Load</a> &nbsp; Generate CPU load, useful for cloud auto scaling demos
+    </p>
+    <p>
+      <a class="btn btn-warning btn-lg" href="/exception">Exception</a> &nbsp; Error page, will trigger exception in App Insights
+    </p>  
+    <p>
+      <a class="btn btn-warning btn-lg" href="/pagemissing">404 Page</a> &nbsp; Trigger a 404, also for App Insights
+    </p>
+  </div>
+</div>

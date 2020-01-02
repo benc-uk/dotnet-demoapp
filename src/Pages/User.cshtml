@@ -1,0 +1,34 @@
+@page
+@model UserInfoModel
+@{
+    ViewData["Title"] = "User Profile";
+} 
+
+<div class="card mb-3">
+  <div class="card-header bg-info text-white"> <i class="fas fa-user-circle"></i> User Details <a asp-area="AzureAD" asp-controller="Account" asp-action="SignOut" class="btn btn-warning btn-lg float-right"><i class="fas fa-sign-out-alt"></i> Sign out</a></div>
+  <div class="card-body">
+    <h3 class="card-title">OIDC Claim Data</h3>
+    <p class="card-text">
+      <table class="table table-hover table-striped">
+        <tr><td>Name:</td> <td>@Model.name</td></tr>
+        <tr><td>Username:</td> <td>@Model.username</td></tr>
+        <tr><td>Preferred Username:</td> <td>@Model.preferredUsername</td></tr>
+        <tr><td>OID:</td ><td>@Model.oid</td></tr>
+        <tr><td>Tenant Id:</td> <td>@Model.tenantId</td></tr>
+      </table>
+    </p> 
+
+    @if(Model.graphData != null) {
+      <hr>
+      <h3 class="card-title">Microsoft Graph</h3>
+      <p class="card-text">
+        @if(@Model.graphPhoto != null) { <img class="graphPhoto" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(Model.graphPhoto))"> }
+        <table class="table table-hover table-striped">
+          @foreach(KeyValuePair<string, string> kvp in Model.graphData) {
+            <tr><td>@kvp.Key:</td> <td>@kvp.Value</td></tr>
+          }
+        </table>
+      </p> 
+    }
+  </div>
+</div>

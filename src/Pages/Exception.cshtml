@@ -1,0 +1,17 @@
+﻿@page
+@model DummyModel
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+
+@{
+    ViewData["Title"] = "Exception";
+}
+
+@functions {
+  public class DummyModel : PageModel
+  {
+    public void OnGet()
+    {
+      throw new System.InvalidOperationException("Cheese not found");
+    }
+  }
+}

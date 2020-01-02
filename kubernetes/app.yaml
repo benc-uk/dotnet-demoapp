@@ -1,0 +1,14 @@
+image:
+  pullPolicy: Always
+
+service:
+  targetPort: 5000
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  tls: 
+    enabled: true
+    secretName: kube-benco-io-cert

@@ -1,0 +1,44 @@
+﻿* {
+  font-size: 103%;  
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+} 
+
+main {
+  padding-top: 2rem;
+}
+
+.card-header {
+  font-size: 200%;
+}
+
+.indexheader {
+  padding: 1rem;
+  font-size: 290%;
+}
+
+.jumbotron {
+  padding-top: 1.5rem;
+}
+
+.graphPhoto {
+  width: 20vw; 
+  border-radius: 50%;
+}
+
+.envvars {
+  word-break: break-all;
+  color:#1ed43c;
+}
+
+.envtable {
+  max-height: 40vh;
+  overflow-y: scroll;
+  font-family: "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace;
+  background-color: #1a1a1a;
+  padding: 1rem;
+}
+
+.weather-info {
+  padding-left: 4rem; 
+  font-size: 1.2em
+}
