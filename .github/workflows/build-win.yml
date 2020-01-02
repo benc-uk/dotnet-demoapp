@@ -22,6 +22,7 @@ jobs:
       
     - name: Build the Docker image
       run: docker build . --file ./docker/nanoserver-1909.Dockerfile --tag $dockerUser/$imageName:nanoserver --tag $acrName.azurecr.io/apps/$imageName:nanoserver
+      shell: bash
     
     - name: Dockerhub Login
       uses: Azure/docker-login@v1
@@ -31,6 +32,7 @@ jobs:
 
     - name: Push to Dockerhub
       run: docker push $dockerUser/$imageName
+      shell: bash
       
     - name: ACR Login
       uses: Azure/docker-login@v1
@@ -41,6 +43,7 @@ jobs:
             
     - name: Push to ACR
       run: docker push $acrName.azurecr.io/apps/$imageName
+      shell: bash
 
     - name: Upload vars artifact
       uses: actions/upload-artifact@v1
