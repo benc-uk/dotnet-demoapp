@@ -34,7 +34,7 @@ LABEL org.label-schema.name    = ".NET Core Demo Web App" \
 WORKDIR /app
 
 # Copy already published binaries (from build stage image)
-COPY --from=build /build/bin/Release/netcoreapp3.0/publish/ .
+COPY --from=build /build/src/bin/Release/netcoreapp3.0/publish/ .
 
 # Expose port 5000 from Kestrel webserver
 EXPOSE 5000
