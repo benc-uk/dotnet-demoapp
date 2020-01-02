@@ -18,11 +18,12 @@
   <!-- fontawesome -->
   <script src="https://kit.fontawesome.com/17aac63d29.js" crossorigin="anonymous"></script>
 
+  <!-- css for chart.js -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous">
-
 
   <title>.NET DemoApp: @ViewData["Title"]</title>
   <link rel="stylesheet" href="~/css/site.css" />
+
   @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 
@@ -44,7 +45,7 @@
         <a href="/monitor" class="btn btn-info btn-lg" type="button"><i class="fas fa-chart-line"></i> Monitoring</a>        
         &nbsp;
         <a href="/tools" class="btn btn-info btn-lg" type="button"><i class="fas fa-wrench"></i> Tools</a> 
-        @if (@Configuration.GetSection("Weather").Exists() || true) 
+        @if (@Configuration.GetSection("Weather").Exists()) 
         { 
           @:&nbsp;<a href="/weather" class="btn btn-info btn-lg" type="button"><i class="fas fa-cloud-sun-rain"></i> Weather</a>           
         }
