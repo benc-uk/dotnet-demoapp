@@ -4,6 +4,22 @@ image:
 service:
   targetPort: 5000
 
+secretEnv:
+  Weather__ApiKey:
+    secretName: dotnet-demoapp
+    secretKey: weatherKey
+  AzureAd__ClientSecret:
+    secretName: dotnet-demoapp
+    secretKey: aadAppSecret
+
+env: 
+  Weather__ApiKey: mongodb://db-mongodb
+  ApplicationInsights__InstrumentationKey: 45f5a949-518c-4216-80bd-6c5632a9342c
+  AzureAd__ClientId: fbe3079c-50c9-4af0-8952-94393255c9af
+  AzureAd__Instance: https://login.microsoftonline.com/
+  AzureAd__TenantId: common
+  AzureAd__CallbackPath: /signin-oidc
+
 ingress:
   enabled: true
   annotations:
