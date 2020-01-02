@@ -14,7 +14,7 @@ secretEnv:
 
 env: 
   Weather__ApiKey: mongodb://db-mongodb
-  ApplicationInsights__InstrumentationKey: 45f5a949-518c-4216-80bd-6c5632a9342c
+  ApplicationInsights__InstrumentationKey: ace55567-7613-45ce-a2b6-f967aa74362e
   AzureAd__ClientId: fbe3079c-50c9-4af0-8952-94393255c9af
   AzureAd__Instance: https://login.microsoftonline.com/
   AzureAd__TenantId: common
