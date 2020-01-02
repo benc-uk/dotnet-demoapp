@@ -3,17 +3,15 @@
 # =======================================================
 
 # Build image has SDK and tools (Linux)
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine as build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine as build
 WORKDIR /build
-ARG srcDir=src
 
 # Copy project source files
-COPY ${srcDir} ./src
+COPY src ./src
 COPY external ./external
 
 # Restore, build & publish
 WORKDIR /build/src
-
 RUN dotnet restore
 RUN dotnet publish --no-restore --configuration Release
 
@@ -22,11 +20,11 @@ RUN dotnet publish --no-restore --configuration Release
 # =======================================================
 
 # Base image is .NET Core runtime only (Linux)
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine
 
 # Metadata in Label Schema format (http://label-schema.org)
 LABEL org.label-schema.name    = ".NET Core Demo Web App" \
-      org.label-schema.version = "1.0.0" \
+      org.label-schema.version = "1.2.1" \
       org.label-schema.vendor  = "Ben Coleman" \
       org.label-schema.vcs-url = "https://github.com/benc-uk/dotnet-demoapp"
 

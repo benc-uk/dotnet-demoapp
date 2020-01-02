@@ -1,0 +1,49 @@
+name: Build Windows Image
+
+on: 
+  push: 
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Note. Required secrets: dockerPassword, acrPassword
+
+env:
+  dockerUser: bencuk
+  acrName: bcdemo
+  imageName: dotnet-demoapp
+
+jobs:
+  buildJob:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      
+    - name: Build the Docker image
+      run: docker build . --file ./docker/nanoserver-1909.Dockerfile --tag $dockerUser/$imageName:nanoserver --tag $acrName.azurecr.io/apps/$imageName:nanoserver
+    
+    - name: Dockerhub Login
+      uses: Azure/docker-login@v1
+      with:
+        username: ${{ env.dockerUser }}
+        password: ${{ secrets.dockerPassword }} 
+
+    - name: Push to Dockerhub
+      run: docker push $dockerUser/$imageName
+      
+    - name: ACR Login
+      uses: Azure/docker-login@v1
+      with:
+        login-server: ${{ env.acrName }}.azurecr.io
+        username: ${{ env.acrName }}
+        password: ${{ secrets.acrPassword }}   
+            
+    - name: Push to ACR
+      run: docker push $acrName.azurecr.io/apps/$imageName
+
+    - name: Upload vars artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: vars
+        path: ./vars.sh
