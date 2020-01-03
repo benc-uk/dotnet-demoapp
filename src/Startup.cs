@@ -9,6 +9,7 @@ using System;
 
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.TokenCacheProviders.InMemory;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace dotnet_demoapp
 {
@@ -28,6 +29,11 @@ namespace dotnet_demoapp
       services.AddApplicationInsightsTelemetry();
 
       services.AddHttpClient();
+
+      services.Configure<ForwardedHeadersOptions>(options => {
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+      });
+    
 
       // Make AzureAd optional, if config is missing, skip it
       if (Configuration.GetSection("AzureAd").Exists())
@@ -118,6 +124,14 @@ namespace dotnet_demoapp
 
       app.UseHttpsRedirection();
       app.UseStaticFiles();
+
+      app.UseForwardedHeaders();
+      app.Use((context, next) => {
+          if (context.Request.Headers["x-forwarded-proto"] == "https") {
+              context.Request.Scheme = "https";
+          }
+          return next();
+      });  
 
       app.UseRouting();
 
