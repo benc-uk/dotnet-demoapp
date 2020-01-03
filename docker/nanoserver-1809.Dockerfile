@@ -3,7 +3,7 @@
 # =======================================================
 
 # Build image has SDK and tools (Nanoserver)
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1903 as build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 as build
 WORKDIR /build
 
 # Copy project source files
@@ -20,7 +20,7 @@ RUN dotnet publish --no-restore --configuration Release
 # =======================================================
 
 # Base image is .NET Core runtime only (Nanoserver)
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-nanoserver-1903
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-nanoserver-1809
 
 # Metadata in Label Schema format (http://label-schema.org)
 LABEL org.label-schema.name    = ".NET Core Demo Web App" \
