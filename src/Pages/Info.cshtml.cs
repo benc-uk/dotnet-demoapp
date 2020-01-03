@@ -53,7 +53,7 @@ namespace dotnet_demoapp.Pages
       while (allEnv.MoveNext())
       {
         string key = allEnv.Key.ToString();
-        if(key.ToLower().Contains("secret") || key.ToLower().Contains("pwd") || key.ToLower().Contains("password")) continue;
+        if(key.ToLower().Contains("key") || key.ToLower().Contains("secret") || key.ToLower().Contains("pwd") || key.ToLower().Contains("password")) continue;
         envVars.Add(key, allEnv.Value.ToString());
       }
     }
