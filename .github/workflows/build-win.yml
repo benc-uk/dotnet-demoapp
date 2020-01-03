@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v1
       
     - name: Build the Docker image
-      run: docker build . --file ./docker/nanoserver-1909.Dockerfile --tag $dockerUser/$imageName:nanoserver --tag $acrName.azurecr.io/apps/$imageName:nanoserver
+      run: docker build . --file ./docker/nanoserver-1809.Dockerfile --tag $dockerUser/$imageName:nanoserver --tag $acrName.azurecr.io/apps/$imageName:nanoserver
       shell: bash
     
     - name: Dockerhub Login
