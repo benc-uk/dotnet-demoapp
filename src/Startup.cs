@@ -28,13 +28,14 @@ namespace dotnet_demoapp
       // The following line enables Application Insights telemetry collection.
       services.AddApplicationInsightsTelemetry();
 
+      // We want to make outbound HTTP calls 
       services.AddHttpClient();
 
+      // This ensures the app works with HTTPS when running behind a proxy such as Kubernetes Ingress
       services.Configure<ForwardedHeadersOptions>(options => {
         options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
       });
     
-
       // Make AzureAd optional, if config is missing, skip it
       if (Configuration.GetSection("AzureAd").Exists())
       {
@@ -125,6 +126,7 @@ namespace dotnet_demoapp
       app.UseHttpsRedirection();
       app.UseStaticFiles();
 
+      // This ensures the app works with HTTPS when running behind a proxy such as Kubernetes Ingress
       app.UseForwardedHeaders();
       app.Use((context, next) => {
           if (context.Request.Headers["x-forwarded-proto"] == "https") {
