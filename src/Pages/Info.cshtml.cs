@@ -31,17 +31,20 @@ namespace dotnet_demoapp.Pages
 
     public void OnGet()
     {
-      try {
-        isInContainer = (System.IO.File.Exists("/app/.insidedocker") || System.IO.File.Exists("/.dockerenv"));
-        isInKubernetes = (System.IO.Directory.Exists("/var/run/secrets/kubernetes.io"));
-      } catch (Exception) {
-      }
+      isInContainer = (System.IO.File.Exists("/app/.insidedocker") || System.IO.File.Exists("/.dockerenv"));
+      isInKubernetes = (System.IO.Directory.Exists("/var/run/secrets/kubernetes.io"));
+
       hostname = System.Environment.MachineName;
       osDesc = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
-      osDesc = osDesc.Substring(0, osDesc.IndexOf('#'));
+      if(osDesc.Contains("#")) {
+        osDesc = osDesc.Substring(0, osDesc.IndexOf('#'));
+      }
+
       osArch = System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString();
       processorCount = Environment.ProcessorCount.ToString();
+
       framework = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+      
       workingSet = (Environment.WorkingSet / (1024 * 1000)).ToString();
       var physicalMemLong = System.GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / (1024 * 1000);
       physicalMem = String.Format("{0:n0}", physicalMemLong);
