@@ -39,7 +39,7 @@ EXPOSE 5000
 
 # Tell Kestrel to listen on port 5000 and serve plain HTTP
 ENV ASPNETCORE_URLS http://*:5000
-RUN echo "dummy-file-ignore" > /.inside-docker
+RUN echo "dummy-file-ignore" > .inside-docker
 
 # Run the ASP.NET Core app
 ENTRYPOINT dotnet dotnet-demoapp.dll

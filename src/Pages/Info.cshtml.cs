@@ -31,7 +31,7 @@ namespace dotnet_demoapp.Pages
 
     public void OnGet()
     {
-      isInContainer = (System.IO.File.Exists("/.insidedocker") || System.IO.File.Exists("/.dockerenv"));
+      isInContainer = (System.IO.File.Exists("/app/.insidedocker") || System.IO.File.Exists("/.dockerenv"));
       isInKubernetes = (System.IO.Directory.Exists("/var/run/secrets/kubernetes.io"));
       hostname = System.Environment.MachineName;
       osDesc = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
