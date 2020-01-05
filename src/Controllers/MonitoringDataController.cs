@@ -19,30 +19,50 @@ namespace dotnet_demoapp.Controllers
         }
 
         [HttpGet]
-        public MonitoringDataPoint Get()
+        public async Task<MonitoringDataPoint> Get()
         {
             var rng = new Random();
 
             MonitoringDataPoint data = new MonitoringDataPoint();
-            data.cpuPercentage = Convert.ToInt32(GetCpuUsage());
+            data.cpuPercentage = Convert.ToInt32(await GetCpuUsageForProcess());
             data.workingSet = Environment.WorkingSet;
 
             return data;
         }
 
-        private double GetCpuUsage()
+        // Gets CPU use for current process
+        private async Task<double> GetCpuUsageForProcess()
+        {
+            var startTime = DateTime.UtcNow;
+            var startCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
+            // Wait 1 second
+            await Task.Delay(1000);
+            
+            var endTime = DateTime.UtcNow;
+            var endCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
+            var cpuUsedMs = (endCpuUsage - startCpuUsage).TotalMilliseconds;
+            var totalMsPassed = (endTime - startTime).TotalMilliseconds;
+            var cpuUsageTotal = cpuUsedMs / (Environment.ProcessorCount * totalMsPassed);
+
+            return cpuUsageTotal * 100;
+        }   
+
+        // No longer used, but left as reference code should I need it some day!
+        private double GetCpuUsageLinux()
         {
             if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux)) {
                 string cpuCmd = "awk -v a=\"$(awk '/cpu /{print $2+$4,$2+$4+$5}' /proc/stat; sleep 1)\" '/cpu /{split(a,b,\" \"); print 100*($2+$4-b[1])/($2+$4+$5-b[2])}' /proc/stat";
-                string cpu = this.ExecBash(cpuCmd);
+                string cpu = this.ExecShell(cpuCmd);
                 return Convert.ToDouble(cpu);
             } else {
+                // NO idea 
                 var rng = new Random();
                 return rng.NextDouble() * 100.0;
             }
         }        
 
-        private string ExecBash(string cmd)
+        // No longer used, but left as reference code should I need it some day!
+        private string ExecShell(string cmd)
         {
             var escapedArgs = cmd.Replace("\"", "\\\"");
             
@@ -63,6 +83,8 @@ namespace dotnet_demoapp.Controllers
             process.WaitForExit();
 
             return result;
-        }        
+        }
+        
+        
     }
 }

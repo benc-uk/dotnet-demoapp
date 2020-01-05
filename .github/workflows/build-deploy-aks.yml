@@ -12,6 +12,8 @@ env:
   dockerUser: bencuk
   acrName: bcdemo
   imageName: dotnet-demoapp
+  # Use Windows container Nanoserver base image
+  imageBase: 3.1-alpine
   host: dotnet-demoapp.kube.benco.io
 
 jobs:
@@ -27,7 +29,7 @@ jobs:
         source ./vars.sh
       
     - name: Build the Docker image
-      run: docker build . --file ./docker/Dockerfile --tag $dockerUser/$imageName:latest --tag $acrName.azurecr.io/apps/$imageName:$imageTag --tag $acrName.azurecr.io/apps/$imageName:latest
+      run: docker build . --build-arg IMAGE_BASE=$imageBase --tag $dockerUser/$imageName:latest --tag $acrName.azurecr.io/apps/$imageName:$imageTag --tag $acrName.azurecr.io/apps/$imageName:latest
     
     - name: Dockerhub Login
       uses: Azure/docker-login@v1

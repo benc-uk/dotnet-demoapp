@@ -1,21 +1,27 @@
 @page
-@model SystemInfoModel
 @{
     ViewData["Title"] = "System Info";
 }
+
 <div class="card mb-3">
   <div class="card-header bg-info text-white"> <i class="fas fa-cloud-sun-rain"></i> Weather</div>
   <div class="card-body">
-    <div class="alert alert-danger fade" role="alert" id="error" style="color: #222"></div>
+    <!-- Message box -->
+    <div class="alert alert-danger fade" role="alert" id="errorBox" style="color: #222"></div>
     
+    <!-- Spinner to show while loading -->
     <p align="center" id="spinner">
       <img src="img/spinner.gif" >
     </p>
 
     <table>
       <tr>
-        <td> <canvas id="weather_icon" width="256" height="256"></canvas> </td>
+        <td> 
+          <!-- Used by skycons.js to show an animated weather icon -->
+          <canvas id="weather_icon" width="256" height="256"></canvas> 
+        </td>
         <td class="weather-info">
+          <!-- Table populated with results -->
           <ul id="weather-list"></ul>
         </td>
       </tr>
@@ -28,61 +34,8 @@
 <img src="img/darksky.png" height="64px"/>
 </div>
 
+<!-- skycons script, see https://darkskyapp.github.io/skycons/  -->
 <script src='js/skycons.js'></script>
-<script>
-  let error = document.getElementById('error');
 
-  if (navigator.geolocation) {
-    error.classList.add('hide');
-    navigator.geolocation.getCurrentPosition(getWeather, (err) => {  
-      let errMessage = err.message;
-      if(err.message.startsWith("Only secure origins are allowed")) {
-        errMessage = "getCurrentPosition API only works on secure (HTTPS) domains";
-      } 
-      error.classList.add('show');
-      error.innerHTML = errMessage + ". Will fall back to showing weather for London";
-      getWeather({ coords: { latitude: 51.40329, longitude: 0.05619 }})
-    });
-  } else {
-    error.classList.add('show');
-    error.innerHTML = "Geolocation is not supported by this browser. Maybe it's time to upgrade!";
-    getWeather({ coords: { latitude: 51.40329, longitude: 0.05619 }})
-    console.err("Geolocation is not supported by this browser.");
-  }
-
-  function getWeather(pos) {
-    let spinner = document.getElementById('spinner');
-    let lat = pos.coords.latitude;    //51.40329 
-    let long = pos.coords.longitude;  //0.05619 
-
-    fetch(`/api/weather/${lat}/${long}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw Error(response.statusText + " " + response.status);
-      }
-      return response.json();
-    })
-    .then((weather) => {
-      console.log(weather);
-      spinner.parentNode.removeChild(spinner);
-      var skycons = new Skycons({ "color": "#3498db" });
-      skycons.add("weather_icon", weather.currently.icon);
-      skycons.play();
-
-      let wList = document.getElementById('weather-list')
-      wList.innerHTML += `<li>The weather currently is: &nbsp; ${weather.currently.summary}</li>`
-      wList.innerHTML += `<li>The temperature is: &nbsp; ${weather.currently.temperature}°C</li>`
-      wList.innerHTML += `<li>The temperature feels like: &nbsp; ${weather.currently.apparentTemperature}°C</li>`
-      wList.innerHTML += `<li>Chance of rain is: &nbsp; ${weather.currently.precipProbability}%</li>`    
-      wList.innerHTML += `<li>The humidity is: &nbsp; ${weather.currently.humidity}%</li>`    
-      wList.innerHTML += `<li>Wind speed: &nbsp; ${weather.currently.windSpeed}%</li>`    
-      wList.innerHTML += `<li>UV index: &nbsp; ${weather.currently.uvIndex}%</li>`    
-    })
-    .catch(err => {
-      spinner.parentNode.removeChild(spinner);
-      error.classList.add('show');
-      error.innerHTML = "Weather API Error - " + err;
-    });
-
-  }
-</script>
+<!-- Our main weather script for calling the API and displaying results -->
+<script src='js/weather.js'></script>

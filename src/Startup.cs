@@ -123,7 +123,7 @@ namespace dotnet_demoapp
         app.UseHsts();
       }
 
-      app.UseHttpsRedirection();
+      //app.UseHttpsRedirection();
       app.UseStaticFiles();
 
       // This ensures the app works with HTTPS when running behind a proxy such as Kubernetes Ingress

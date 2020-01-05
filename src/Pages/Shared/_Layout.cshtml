@@ -24,7 +24,7 @@
   <title>.NET DemoApp: @ViewData["Title"]</title>
   <link rel="stylesheet" href="~/css/site.css" />
 
-  @Html.Raw(JavaScriptSnippet.FullScript)
+  @Html.Raw(AppInsightsSnippet.FullScript)
 </head>
 
 <body>
@@ -47,7 +47,8 @@
         <a href="/tools" class="btn btn-info btn-lg" type="button"><i class="fas fa-wrench"></i> Tools</a> 
         @if (@Configuration.GetSection("Weather").Exists()) 
         { 
-          @:&nbsp;<a href="/weather" class="btn btn-info btn-lg" type="button"><i class="fas fa-cloud-sun-rain"></i> Weather</a>           
+          @:&nbsp;
+          <a href="/weather" class="btn btn-info btn-lg" type="button"><i class="fas fa-cloud-sun-rain"></i> Weather</a>           
         }
       </div>
 
