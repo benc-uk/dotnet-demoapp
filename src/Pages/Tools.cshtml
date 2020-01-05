@@ -1,4 +1,4 @@
-﻿@page "{action?}"
+﻿@page "{action?}/{value?}"
 @model ToolsModel
 @{
     ViewData["Title"] = "Tools";
@@ -18,10 +18,12 @@
 
   <div class="card-body">
     <p>
-      <a class="btn btn-warning btn-lg w-25" href="/load">CPU Load</a> &nbsp; Generate CPU load
+      <a class="btn btn-warning btn-lg w-25" href="#" onclick="doLoad()">CPU Load</a> &nbsp; Generate CPU load, running 
+      <input id="iter" value="20" size="3" required type="number" min="1" max="500" /> iterations
     </p>
     <p>
-      <a class="btn btn-warning btn-lg w-25" href="/tools/mem">Alloc Memory</a> &nbsp; Force allocation of memory
+      <a class="btn btn-warning btn-lg w-25" href="#" onclick="doAlloc()">Alloc Memory</a> &nbsp; Force allocation of
+      <input id="mem" value="50" size="3" required type="number" min="1" max="5000" /> Mbytes of memory
     </p>      
     <p>
       <a class="btn btn-warning btn-lg w-25" href="/tools/exception">Exception</a> &nbsp; Error page, will trigger exception
@@ -34,3 +36,13 @@
     </p>
   </div>
 </div>
+
+<script>
+  function doLoad() {
+    location.href = '/tools/load/' + document.getElementById('iter').value;
+  }
+
+  function doAlloc() {
+    location.href = '/tools/alloc/' + document.getElementById('mem').value;
+  }  
+</script>
