@@ -3,6 +3,12 @@
     ViewData["Title"] = "Realtime Monitor";
 }
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+<script>
+  var chartCssLink = document.createElement("link");
+  chartCssLink.rel = "stylesheet";
+  chartCssLink.href = "https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css";
+  document.head.appendChild(chartCssLink);
+</script>
 
 <div class="card mb-3">
   <div class="card-header bg-info text-white"> <i class="fas fa-chart-line"></i> Realtime Monitor</div>
