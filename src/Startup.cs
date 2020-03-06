@@ -40,11 +40,10 @@ namespace dotnet_demoapp
       if (Configuration.GetSection("AzureAd").Exists())
       {
 
-        services.Configure<CookiePolicyOptions>(options =>
-        {
-            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-            options.CheckConsentNeeded = context => false;
-            options.MinimumSameSitePolicy = SameSiteMode.None;
+        services.Configure<CookiePolicyOptions>(options => {
+          // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+          options.CheckConsentNeeded = context => false;
+          options.MinimumSameSitePolicy = SameSiteMode.None;
         });
 
         // Sign-in users with the Microsoft identity platform
@@ -52,55 +51,9 @@ namespace dotnet_demoapp
         .AddMsal(Configuration, new string[] { "User.Read" })
         .AddInMemoryTokenCaches();
 
-        services.AddRazorPages().AddRazorPagesOptions(options =>
-        {
-            options.Conventions.AuthorizePage("/User");
-        });          
-
-        /*services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
-        .AddAzureAD(options => {
-          // Force the use of the 'common' endpoints for the STS etc.
-          options.Instance = "https://login.microsoftonline.com/common";
-          Configuration.Bind("AzureAd", options);
-        });
-
-        services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options => {
-          // Force use of v2 endpoint, this changes a lot of things in the claims we get
-          // But also allows us to sign in with a mix of accounts
-          options.Authority = options.Authority + "/v2.0/";
-
-          options.TokenValidationParameters = new TokenValidationParameters
-          {
-            ValidateIssuer = false,
-            // With v2 endpoints the name will be blank, so use the preferred_username claim instead
-            //NameClaimType = "email"
-            NameClaimType = "preferred_username"
-          };
-
-          options.Events = new OpenIdConnectEvents
-          {
-            OnTicketReceived = context => {
-              //Console.WriteLine(context);
-              // If your authentication logic is based on users then add your logic here
-              return Task.CompletedTask;
-            },
-            OnAuthenticationFailed = context => {
-              context.Response.Redirect("/Error");
-              context.HandleResponse(); // Suppress the exception
-              return Task.CompletedTask;
-            },
-            OnTokenValidated = context => {
-              return Task.CompletedTask;
-            }
-          };
-        });
-
         services.AddRazorPages().AddRazorPagesOptions(options => {
           options.Conventions.AuthorizePage("/User");
-        });
-
-        services.AddRazorPages();
-        */
+        });          
       }
       else
       {
@@ -112,12 +65,9 @@ namespace dotnet_demoapp
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
     {
-      if (env.IsDevelopment())
-      {
+      if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();
-      }
-      else
-      {
+      } else {
         app.UseExceptionHandler("/Error");
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
@@ -129,10 +79,10 @@ namespace dotnet_demoapp
       // This ensures the app works with HTTPS when running behind a proxy such as Kubernetes Ingress
       app.UseForwardedHeaders();
       app.Use((context, next) => {
-          if (context.Request.Headers["x-forwarded-proto"] == "https") {
-              context.Request.Scheme = "https";
-          }
-          return next();
+        if (context.Request.Headers["x-forwarded-proto"] == "https") {
+          context.Request.Scheme = "https";
+        }
+        return next();
       });  
 
       app.UseRouting();
@@ -140,19 +90,15 @@ namespace dotnet_demoapp
       app.UseStatusCodePages("text/html", "<h1>Something went wrong!</h1>HTTP status code: {0}<br><br><a href='/'>Return to app</a>"); 
 
       // AzureAd config is optional
-      if (Configuration.GetSection("AzureAd").Exists())
-      {
+      if (Configuration.GetSection("AzureAd").Exists()) {
         logger.LogInformation("### AzureAd: Enabled with client id: " + Configuration.GetValue<string>("AzureAd:ClientId"));
         app.UseAuthentication();
         app.UseAuthorization();
-      }
-      else
-      {
+      } else {
         logger.LogInformation("### AzureAd: Disabled");
       }
 
-      app.UseEndpoints(endpoints =>
-      {
+      app.UseEndpoints(endpoints => {
         endpoints.MapRazorPages();
         endpoints.MapControllers();
       });
