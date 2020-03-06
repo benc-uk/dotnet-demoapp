@@ -1,0 +1,16 @@
+apiVersion : apps/v1beta1
+kind: Deployment
+metadata:
+  name: tempdemoapp 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tempdemoapp 
+    spec:
+      containers:
+        - name: tempdemoapp 
+          image: bcdemo.azurecr.io/tempdemoapp
+          ports:
+          - containerPort: 5000
