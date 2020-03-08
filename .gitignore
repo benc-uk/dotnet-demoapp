@@ -37,3 +37,6 @@ msbuild.wrn
 .vs/
 
 appsettings.Development.json
+
+secrets.*
+!*.sample.*

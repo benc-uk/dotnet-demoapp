@@ -1,0 +1,55 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet-demoapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dotnet-demoapp
+  template:
+    metadata:
+      labels:
+        app: dotnet-demoapp
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: demo
+          image: bencuk/dotnet-demoapp:latest
+          imagePullPolicy: Always
+
+          env:
+            - name: ApplicationInsights__InstrumentationKey
+              value: "ace55567-7613-45ce-a2b6-f967aa74362e"
+            - name: Weather__ApiKey
+              valueFrom:
+                secretKeyRef:
+                  name: dotnet-demoapp
+                  key: weatherKey            
+          
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+
+          livenessProbe:
+            httpGet:
+              path: /info
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /info
+              port: 5000
+
+          resources:
+            limits:
+              cpu: "0.3"
+              memory: "256Mi"
+            requests:
+              cpu: "0.1"
+              memory: "100Mi"
