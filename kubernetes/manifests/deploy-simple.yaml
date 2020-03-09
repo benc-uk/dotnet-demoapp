@@ -17,9 +17,9 @@ spec:
         app: dotnet-demoapp
 
     spec:
-      serviceAccountName: default
       containers:
         - name: demo
           image: bencuk/dotnet-demoapp:latest  
+
           ports:
             - containerPort: 5000
