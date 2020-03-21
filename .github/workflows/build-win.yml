@@ -20,7 +20,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
+      with:
+        submodules: 'recursive'
       
     - name: Build the Docker image
       run: docker build . --build-arg IMAGE_BASE=$imageBase --tag $dockerUser/$imageName:nanoserver --tag $acrName.azurecr.io/apps/$imageName:nanoserver
