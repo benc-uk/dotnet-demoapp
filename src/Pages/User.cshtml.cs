@@ -64,7 +64,7 @@ namespace dotnet_demoapp.Pages
             // Acquire the access token
             try {
                 string[] scopes = new string[]{"user.read"};
-                string accessToken = await _tokenAcquisition.GetAccessTokenOnBehalfOfUserAsync(scopes);
+                string accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(scopes);
 
                 // Create a client
                 var graphClient = new GraphServiceClient(

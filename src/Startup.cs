@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 
 using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web.TokenCacheProviders.InMemory;
 using Microsoft.AspNetCore.HttpOverrides;
 
@@ -47,9 +48,14 @@ namespace dotnet_demoapp
         });
 
         // Sign-in users with the Microsoft identity platform
-        services.AddMicrosoftIdentityPlatformAuthentication(Configuration)
-        .AddMsal(Configuration, new string[] { "User.Read" })
-        .AddInMemoryTokenCaches();
+        services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddSignIn("AzureAd", Configuration, options => Configuration.Bind("AzureAd", options));
+                
+        services.AddWebAppCallsProtectedWebApi(Configuration, new string[] { "User.Read" })
+                .AddInMemoryTokenCaches();
+        //services.AddSignIn("AzureAd", Configuration, options => Configuration.Bind("AzureAd", options))
+        // .AddMsal(Configuration, new string[] { "User.Read" })
+        // .AddInMemoryTokenCaches();
 
         services.AddRazorPages().AddRazorPagesOptions(options => {
           options.Conventions.AuthorizePage("/User");
