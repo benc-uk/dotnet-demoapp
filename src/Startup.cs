@@ -71,6 +71,13 @@ namespace dotnet_demoapp
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
     {
+      app.Use(async (context, next) =>
+      {
+          // Cheap & simple request logging
+          logger.LogInformation($"### {DateTime.Now.ToUniversalTime()} {context.Request.Scheme} {context.Request.Method} {context.Request.Path} {context.Response.StatusCode}");
+          await next.Invoke();
+      });
+
       if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();
       } else {

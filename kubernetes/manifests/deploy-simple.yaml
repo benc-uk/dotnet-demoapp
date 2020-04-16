@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: demo
-          image: bencuk/dotnet-demoapp:latest  
+          image: bcdemo.azurecr.io/temp/demoapp:latest  
 
           ports:
             - containerPort: 5000

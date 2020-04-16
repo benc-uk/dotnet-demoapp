@@ -16,7 +16,7 @@ spec:
       serviceAccountName: default
       containers:
         - name: demo
-          image: bencuk/dotnet-demoapp:latest
+          image: bcdemo.azurecr.io/temp/demoapp:latest
           imagePullPolicy: Always
 
           env:
@@ -25,7 +25,7 @@ spec:
             - name: Weather__ApiKey
               valueFrom:
                 secretKeyRef:
-                  name: dotnet-demoapp
+                  name: dotnet-secrets
                   key: weatherKey            
           
           ports:
