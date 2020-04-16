@@ -74,7 +74,11 @@ namespace dotnet_demoapp
       app.Use(async (context, next) =>
       {
           // Cheap & simple request logging
-          logger.LogInformation($"### {DateTime.Now.ToUniversalTime()} {context.Request.Scheme} {context.Request.Method} {context.Request.Path} {context.Response.StatusCode}");
+          string userAgent = context.Request.Headers["User-Agent"];
+          // Don't log if UA is Go-http-client which is what k8s uses for probing
+          if(!userAgent.Contains("Go-http-client")) {
+            logger.LogInformation($"### {DateTime.Now.ToUniversalTime()} {context.Request.Scheme} {context.Request.Method} {context.Request.Path} {context.Response.StatusCode}");
+          }
           await next.Invoke();
       });
 
