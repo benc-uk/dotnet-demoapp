@@ -113,4 +113,5 @@ If running locally, and using appsettings.json, this can be configured as follow
 
 
 # Updates
+* Jun 2020 - Moved to NuGet for the Microsoft.Identity.Web
 * Jan 2020 - Rewritten from scratch

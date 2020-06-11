@@ -26,7 +26,7 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:$IMAGE_BASE
 
 # Metadata in Label Schema format (http://label-schema.org)
 LABEL org.label-schema.name    = ".NET Core Demo Web App" \
-      org.label-schema.version = "1.3.0" \
+      org.label-schema.version = "1.3.3" \
       org.label-schema.vendor  = "Ben Coleman" \
       org.label-schema.vcs-url = "https://github.com/benc-uk/dotnet-demoapp"
 

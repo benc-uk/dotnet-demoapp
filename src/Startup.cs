@@ -49,13 +49,10 @@ namespace dotnet_demoapp
 
         // Sign-in users with the Microsoft identity platform
         services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddSignIn("AzureAd", Configuration, options => Configuration.Bind("AzureAd", options));
+                .AddSignIn(Configuration);
                 
         services.AddWebAppCallsProtectedWebApi(Configuration, new string[] { "User.Read" })
                 .AddInMemoryTokenCaches();
-        //services.AddSignIn("AzureAd", Configuration, options => Configuration.Bind("AzureAd", options))
-        // .AddMsal(Configuration, new string[] { "User.Read" })
-        // .AddInMemoryTokenCaches();
 
         services.AddRazorPages().AddRazorPagesOptions(options => {
           options.Conventions.AuthorizePage("/User");

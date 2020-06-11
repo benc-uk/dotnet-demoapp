@@ -4,17 +4,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>dotnet_demoapp</RootNamespace>
 
-    <Version>1.3.1</Version>
+    <Version>1.3.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="3.0.0" /> -->
     <PackageReference Include="Microsoft.Graph" Version="1.14.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.13.1" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="0.1.4-preview" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\external\microsoft-identity-web\src\Microsoft.Identity.Web\Microsoft.Identity.Web.csproj" />
-  </ItemGroup>  
 
 </Project>

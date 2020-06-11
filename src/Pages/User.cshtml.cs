@@ -38,10 +38,6 @@ namespace dotnet_demoapp.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            if(!User.Identity.IsAuthenticated) {
-                return Redirect("/");
-            }
-
             foreach(Claim claim in User.Claims) {
                 if (claim.Type.Contains("objectidentifier") || claim.Type.Contains("oid")) {
                     oid = claim.Value;
@@ -55,7 +51,6 @@ namespace dotnet_demoapp.Pages
                 if (claim.Type == "preferred_username") {
                     preferredUsername = claim.Value;
                 }                           
-                //Console.WriteLine("### Claim: " + claim.Type + " == " + claim.Value);
             }
 
             username = User.Identity.Name; 
