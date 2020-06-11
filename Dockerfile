@@ -10,7 +10,6 @@ WORKDIR /build
 
 # Copy project source files
 COPY src ./src
-COPY external ./external
 
 # Restore, build & publish
 WORKDIR /build/src
