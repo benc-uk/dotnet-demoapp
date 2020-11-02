@@ -17,12 +17,12 @@ on:
 
 env:
   IMAGE_REG: ghcr.io
-  IMAGE_REPO: benc-uk/nodejs-demoapp
+  IMAGE_REPO: benc-uk/dotnet-demoapp
   AKS_NAME: benc
   AKS_RES_GROUP: aks
   HELM_RELEASE: dotnet
   HELM_NAMESPACE: demoapps
-  INGRESS_DNS_HOST: nodejs-demoapp.kube.benco.io
+  INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
 
 jobs:
   #
