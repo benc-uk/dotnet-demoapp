@@ -31,23 +31,25 @@ Tested with Dotnet Core v3.0 and 3.1
 
 
 # Docker 
-Public Docker image is [available on Dockerhub](https://hub.docker.com/r/bencuk/dotnet-demoapp/).  
+Public Docker image is [available on GitHub Container Registry](https://github.com/users/benc-uk/packages/container/package/nodejs-demoapp).  
 
 Run in a container with:
 ```
-docker run -d -p 5000:5000 bencuk/dotnet-demoapp
+docker run --rm -it -p 5000:5000 ghcr.io/benc-uk/dotnet-demoapp:latest
 ```
 
-Should you want to build your own container, use the `Dockerfile` found the in the 'docker' directory of the project
+Should you want to build your own container, use the `Dockerfile` at the root of the project
 
-# GitHub Actions CI/CD 
-A working CI and release GitHub Actions workflow is provided `.github/workflows/build-deploy-aks.yml`, automated builds are run in GitHub hosted runners
 
-### [GitHub Actions](https://github.com/benc-uk/dotnet-demoapp/actions)
+### [GitHub Actions](https://github.com/benc-uk/nodejs-demoapp/actions)
 
-![](https://img.shields.io/github/workflow/status/benc-uk/dotnet-demoapp/Build%20%26%20Deploy%20AKS)  
-![](https://img.shields.io/github/last-commit/benc-uk/dotnet-demoapp)  
+[![](https://img.shields.io/github/workflow/status/benc-uk/nodejs-demoapp/CI%20Build%20App)](https://github.com/benc-uk/nodejs-demoapp/actions?query=workflow%3A%22CI+Build+App%22)
 
+[![](https://img.shields.io/github/workflow/status/benc-uk/nodejs-demoapp/CD%20Release%20-%20AKS?label=release-kubernetes)](https://github.com/benc-uk/nodejs-demoapp/actions?query=workflow%3A%22CD+Release+-+AKS%22)
+
+[![](https://img.shields.io/github/workflow/status/benc-uk/nodejs-demoapp/CD%20Release%20-%20Webapp?label=release-azure)](https://github.com/benc-uk/nodejs-demoapp/actions?query=workflow%3A%22CD+Release+-+Webapp%22)
+
+[![](https://img.shields.io/github/last-commit/benc-uk/nodejs-demoapp)](https://github.com/benc-uk/nodejs-demoapp/commits/master)
 
 # Optional Features
 The app will start up and run with zero configuration, however the only features that will be available will be the Info, Tools & Monitoring views. The following optional features can be enabled:
@@ -111,7 +113,7 @@ If running locally, and using appsettings.json, this can be configured as follow
   },
 ```
 
-
 # Updates
+* Nov 2020 - New GitHub pipelines & container registry
 * Jun 2020 - Moved to NuGet for the Microsoft.Identity.Web
 * Jan 2020 - Rewritten from scratch
