@@ -12,7 +12,7 @@ secretEnv:
     secretName: dotnet-demoapp
     secretKey: aadAppSecret
 
-env: 
+env:
   ApplicationInsights__InstrumentationKey: ace55567-7613-45ce-a2b6-f967aa74362e
   AzureAd__ClientId: 3584ac39-1ab1-4fe6-a3dd-4b2fbedc9d7d
   AzureAd__Instance: https://login.microsoftonline.com/
@@ -22,8 +22,7 @@ env:
 ingress:
   enabled: true
   annotations:
-    kubernetes.io/ingress.class: addon-http-application-routing
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  tls: 
+  tls:
     enabled: true
     secretName: kube-benco-io-cert
