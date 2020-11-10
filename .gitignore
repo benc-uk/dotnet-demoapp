@@ -40,3 +40,4 @@ appsettings.Development.json
 
 secrets.*
 !*.sample.*
+infra/bicep
