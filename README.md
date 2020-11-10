@@ -113,7 +113,19 @@ If running locally, and using appsettings.json, this can be configured as follow
   },
 ```
 
+
+## Running in Azure App Service (Linux)
+
+If you want to deploy to an Azure Web App as a container (aka Linux Web App), a Bicep template is provided in the [infrastructure as code](infra/) directory
+
+You can also very quickly deploy to Azure App Service directly with the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/) and `az webapp up`. Note. `<app-name>` must be globally unique. Change the sku to a larger size, e.g. `P1V2` for a much faster deployment
+```
+cd src
+az webapp up --sku F1 --name <app-name>
+```
+
 # Updates
+* Nov 2020 - Updated to .NET 5
 * Nov 2020 - New GitHub pipelines & container registry
 * Jun 2020 - Moved to NuGet for the Microsoft.Identity.Web
 * Jan 2020 - Rewritten from scratch
