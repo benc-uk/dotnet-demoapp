@@ -120,6 +120,7 @@ If you want to deploy to an Azure Web App as a container (aka Linux Web App), a 
 
 You can also very quickly deploy to Azure App Service directly with the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/) and `az webapp up`. Note. `<app-name>` must be globally unique. Change the sku to a larger size, e.g. `P1V2` for a much faster deployment
 ```
+cd src
 az webapp up --sku F1 --name <app-name>
 ```
 
