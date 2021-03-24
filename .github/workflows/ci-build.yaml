@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths:
       - "src/**"
+      - "tests/**"
   pull_request:
 
 env:
@@ -62,7 +63,7 @@ jobs:
         with:
           workflow: "CD Release - AKS"
           token: ${{ secrets.CR_PAT }}
-          inputs: '{ "IMAGE_TAG": "dev-${{ github.run_id }}" }'
+          inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
 
       - name: "Trigger Azure web app release pipeline"
         if: github.ref == 'refs/heads/master'
@@ -70,4 +71,4 @@ jobs:
         with:
           workflow: "CD Release - Webapp"
           token: ${{ secrets.CR_PAT }}
-          inputs: '{ "IMAGE_TAG": "dev-${{ github.run_id }}" }'
+          inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'

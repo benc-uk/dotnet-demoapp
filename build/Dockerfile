@@ -27,7 +27,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:$IMAGE_BASE
 LABEL org.label-schema.name    = ".NET Core Demo Web App" \
       org.label-schema.version = "1.4.1" \
       org.label-schema.vendor  = "Ben Coleman" \
-      org.label-schema.vcs-url = "https://github.com/benc-uk/dotnet-demoapp"
+      org.opencontainers.image.source = "https://github.com/benc-uk/dotnet-demoapp"
 
 # Seems as good a place as any
 WORKDIR /app

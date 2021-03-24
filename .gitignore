@@ -41,3 +41,6 @@ secrets.*
 !*.sample.*
 .secrets
 node_modules
+package.json
+package-lock.json
+tests/TestResults/**
