@@ -53,3 +53,12 @@ test-report:  ## 🤡 Unit tests with xUnit & output report
 test-api:  ## 🚦 Run integration API tests, server must be running!
 	node node_modules/.bin/newman -v > /dev/null 2>&1 || npm install newman
 	node_modules/.bin/newman run tests/postman_collection.json --env-var apphost=$(TEST_HOST)
+
+clean:  ## 🧹 Clean up project
+	rm -rf node_modules
+	rm -rf package*.json
+	rm -rf tests/TestResults
+	rm -rf tests/bin
+	rm -rf tests/obj
+	rm -rf $(SRC_DIR)/bin
+	rm -rf $(SRC_DIR)/obj
