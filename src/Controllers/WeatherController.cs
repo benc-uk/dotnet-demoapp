@@ -31,10 +31,11 @@ namespace dotnet_demoapp.Controllers
             // NOTE! We *DONT* need to deserialise the data we get
             // We're basically a proxy, so we use the raw ContentResult
             ContentResult result = new ContentResult();
-            
+
             _logger.LogInformation($"Fetching weather data from api.darksky.net for {posLat}, {posLong}");
             string apiKey = _config.GetValue<string>("Weather:ApiKey");
-            if(apiKey == null) { 
+            if (apiKey == null)
+            {
                 result.StatusCode = 500;
                 return result;
             }
@@ -46,7 +47,8 @@ namespace dotnet_demoapp.Controllers
             var client = _clientFactory.CreateClient();
             response = await client.SendAsync(request);
 
-            if (response.IsSuccessStatusCode) {
+            if (response.IsSuccessStatusCode)
+            {
                 // Simply get the raw data as a string and pass it back to the client
                 var apiData = await response.Content.ReadAsStringAsync();
                 result.ContentType = "application/json";
@@ -54,7 +56,9 @@ namespace dotnet_demoapp.Controllers
                 result.Content = apiData;
 
                 return result;
-            } else {
+            }
+            else
+            {
                 result.StatusCode = (int)response.StatusCode;
                 return result;
             }
