@@ -16,11 +16,11 @@ SRC_DIR := src
 help:  ## 💬 This help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-lint: $(SRC_DIR)/node_modules  ## 🔎 Lint & format, will not fix but sets exit code on error 
+lint:  ## 🔎 Lint & format, will not fix but sets exit code on error 
 	@dotnet format --help > /dev/null 2> /dev/null || dotnet tool install --global dotnet-format
 	dotnet format --check ./src
 
-lint-fix: $(SRC_DIR)/node_modules  ## 📜 Lint & format, will try to fix errors and modify code 
+lint-fix:  ## 📜 Lint & format, will try to fix errors and modify code 
 	@dotnet format --help > /dev/null 2> /dev/null || dotnet tool install --global dotnet-format
 	dotnet format ./src
 
