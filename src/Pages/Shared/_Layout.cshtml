@@ -42,7 +42,7 @@
         <a href="/monitor" class="btn btn-info btn-lg" type="button"><i class="fas fa-chart-line"></i> Monitoring</a>        
         &nbsp;
         <a href="/tools" class="btn btn-info btn-lg" type="button"><i class="fas fa-wrench"></i> Tools</a> 
-        @if (@Configuration.GetSection("Weather").Exists()) 
+        @if (@Configuration.GetSection("Weather").Exists() && Configuration.GetSection("Weather").GetValue<String>("ApiKey") != "") 
         { 
           @:&nbsp;
           <a href="/weather" class="btn btn-info btn-lg" type="button"><i class="fas fa-cloud-sun-rain"></i> Weather</a>           

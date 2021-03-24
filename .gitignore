@@ -24,7 +24,6 @@ nupkg/
 [Rr]eleases/
 x64/
 x86/
-build/
 bld/
 [Bb]in/
 [Oo]bj/
@@ -40,4 +39,5 @@ appsettings.Development.json
 
 secrets.*
 !*.sample.*
-infra/bicep
+.secrets
+node_modules

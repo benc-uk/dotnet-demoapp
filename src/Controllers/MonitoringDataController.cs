@@ -37,7 +37,7 @@ namespace dotnet_demoapp.Controllers
             var startCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
             // Wait 1 second
             await Task.Delay(1000);
-            
+
             var endTime = DateTime.UtcNow;
             var endCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
             var cpuUsedMs = (endCpuUsage - startCpuUsage).TotalMilliseconds;
@@ -45,27 +45,30 @@ namespace dotnet_demoapp.Controllers
             var cpuUsageTotal = cpuUsedMs / (Environment.ProcessorCount * totalMsPassed);
 
             return cpuUsageTotal * 100;
-        }   
+        }
 
         // No longer used, but left as reference code should I need it some day!
         private double GetCpuUsageLinux()
         {
-            if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux)) {
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+            {
                 string cpuCmd = "awk -v a=\"$(awk '/cpu /{print $2+$4,$2+$4+$5}' /proc/stat; sleep 1)\" '/cpu /{split(a,b,\" \"); print 100*($2+$4-b[1])/($2+$4+$5-b[2])}' /proc/stat";
                 string cpu = this.ExecShell(cpuCmd);
                 return Convert.ToDouble(cpu);
-            } else {
+            }
+            else
+            {
                 // NO idea 
                 var rng = new Random();
                 return rng.NextDouble() * 100.0;
             }
-        }        
+        }
 
         // No longer used, but left as reference code should I need it some day!
         private string ExecShell(string cmd)
         {
             var escapedArgs = cmd.Replace("\"", "\\\"");
-            
+
             var process = new Process()
             {
                 StartInfo = new ProcessStartInfo
@@ -84,7 +87,7 @@ namespace dotnet_demoapp.Controllers
 
             return result;
         }
-        
-        
+
+
     }
 }

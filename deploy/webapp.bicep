@@ -3,12 +3,17 @@ param location string = resourceGroup().location
 param planName string = 'app-plan-linux'
 param planTier string = 'P1v2'
 
-param webappName string = 'nodejs-demoapp'
-param webappImage string = 'ghcr.io/benc-uk/nodejs-demoapp:latest'
+param webappName string = 'dotnet-demoapp'
+param webappImage string = 'ghcr.io/benc-uk/dotnet-demoapp:latest'
 param weatherKey string = ''
-param adClientSecret string = ''
+param releaseInfo string = 'Released on ${utcNow('f')}'
 
-resource appServicePlan 'Microsoft.Web/serverFarms@2020-06-01' = {
+// These can be left blank and AAD auth will be disbaled by the app at runtime
+@secure()
+param adClientSecret string = ''
+param adClientId string = ''
+
+resource appServicePlan 'Microsoft.Web/serverfarms@2020-10-01' = {
   name: planName
   location: location
   kind: 'linux'
@@ -20,7 +25,7 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2020-06-01' = {
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2018-11-01' = {
+resource webApp 'Microsoft.Web/sites@2020-10-01' = {
   name: webappName
   location: location
   properties: {
@@ -37,7 +42,7 @@ resource webApp 'Microsoft.Web/sites@2018-11-01' = {
         }
         {
           name: 'AzureAd__ClientId'
-          value: '3584ac39-1ab1-4fe6-a3dd-4b2fbedc9d7d'
+          value: adClientId
         }
         {
           name: 'AzureAd__Instance'
@@ -50,7 +55,11 @@ resource webApp 'Microsoft.Web/sites@2018-11-01' = {
         {
           name: 'AzureAd__CallbackPath'
           value: '/signin-oidc'
-        }                                       
+        }
+        {
+          name: 'RELEASE_INFO'
+          value: releaseInfo
+        }                                      
       ]
       linuxFxVersion: 'DOCKER|${webappImage}'
     }

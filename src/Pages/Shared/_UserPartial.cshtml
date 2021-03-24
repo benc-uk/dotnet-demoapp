@@ -2,7 +2,7 @@
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 
-@if (@Configuration.GetSection("AzureAd").Exists())
+@if (@Configuration.GetSection("AzureAd").Exists() && Configuration.GetSection("AzureAd").GetValue<String>("ClientId") != "")
 {
     <div class="navbar-nav ml-auto">
         &nbsp;

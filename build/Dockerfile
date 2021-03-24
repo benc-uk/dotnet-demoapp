@@ -5,7 +5,6 @@
 ARG IMAGE_BASE=5.0-alpine
 
 # Build image has SDK and tools (Linux)
-#FROM mcr.microsoft.com/dotnet/sdk:5.0 as build
 FROM mcr.microsoft.com/dotnet/sdk:$IMAGE_BASE as build
 WORKDIR /build
 
@@ -22,12 +21,11 @@ RUN dotnet publish --no-restore --configuration Release
 # =======================================================
 
 # Base image is .NET Core runtime only (Linux)
-#FROM mcr.microsoft.com/dotnet/aspnet:5.0
 FROM mcr.microsoft.com/dotnet/aspnet:$IMAGE_BASE
 
 # Metadata in Label Schema format (http://label-schema.org)
 LABEL org.label-schema.name    = ".NET Core Demo Web App" \
-      org.label-schema.version = "1.4.0" \
+      org.label-schema.version = "1.4.1" \
       org.label-schema.vendor  = "Ben Coleman" \
       org.label-schema.vcs-url = "https://github.com/benc-uk/dotnet-demoapp"
 
