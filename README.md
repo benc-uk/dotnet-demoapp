@@ -20,6 +20,21 @@ The app has several basic pages accessed from the top navigation menu, some of w
 
 # Running and Testing Locally
 
+### Pre-reqs
+
+- Be using Linux, WSL or MacOS, with bash, make etc
+- [.NET Core / .NET 5](https://docs.microsoft.com/en-us/dotnet/core/install/linux) - for running locally, linting, running tests etc
+- [Docker](https://docs.docker.com/get-docker/) - for running as a container, or image build and push
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-linux) - for deployment to Azure
+
+Clone the project to any directory where you do development work
+
+```
+git clone https://github.com/benc-uk/dotnet-demoapp.git
+```
+
+### Makefile
+
 A standard GNU Make file is provided to help with running and building locally.
 
 ```txt
@@ -33,8 +48,10 @@ lint                 🔎 Lint & format, will not fix but sets exit code on erro
 push                 📤 Push container image to registry
 test-report          🎯 Unit tests with xUnit & output report
 test                 🤡 Unit tests with xUnit
+test-api              🚦 Run integration API tests, server must be running!
 deploy               🚀 Deploy to Azure Web App
 undeploy             💀 Remove from Azure
+clean                🧹 Clean up project
 ```
 
 Make file variables and default values, pass these in when calling `make`, e.g. `make image IMAGE_REPO=blah/foo`
@@ -44,27 +61,33 @@ Make file variables and default values, pass these in when calling `make`, e.g. 
 | IMAGE_REG         | ghcr<span>.</span>io   |
 | IMAGE_REPO        | benc-uk/dotnet-demoapp |
 | IMAGE_TAG         | latest                 |
-| DEPLOY_RES_GROUP  | temp-demoapps          |
-| DEPLOY_REGION     | uksouth                |
-| DEPLOY_SITE_NAME  | dotnetapp-{git-sha}    |
+| AZURE_RES_GROUP   | temp-demoapps          |
+| AZURE_REGION      | uksouth                |
+| AZURE_SITE_NAME   | dotnetapp-{git-sha}    |
 
 Web app will listen on the usual Kestrel port of 5000, but this can be changed by setting the `ASPNETCORE_URLS` environmental variable or with the `--urls` parameter ([see docs](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-3.1)).
 
 Tested with Dotnet Core v3.0, 3.1 & 5.0
 
-# Docker
+# Containers
 
-Public Docker image is [available on GitHub Container Registry](https://github.com/users/benc-uk/packages/container/package/dotnet-demoapp).
+Public container image is [available on GitHub Container Registry](https://github.com/users/benc-uk/packages/container/package/dotnet-demoapp).
 
 Run in a container with:
 
-```
-
+```bash
 docker run --rm -it -p 5000:5000 ghcr.io/benc-uk/dotnet-demoapp:latest
-
 ```
 
-Should you want to build your own container, use the `make image` command
+Should you want to build your own container, use `make image` and the above variables to customise the name & tag.
+
+## Kubernetes
+
+The app can easily be deployed to Kubernetes using Helm, see [deploy/kubernetes/readme.md](deploy/kubernetes/readme.md) for details
+
+# GitHub Actions CI/CD
+
+A working set of CI and CD release GitHub Actions workflows are provided `.github/workflows/`, automated builds are run in GitHub hosted runners
 
 ### [GitHub Actions](https://github.com/benc-uk/dotnet-demoapp/actions)
 

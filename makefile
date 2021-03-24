@@ -1,16 +1,21 @@
+# Used by `image`, `push` & `deploy` targets, override as required
 IMAGE_REG ?= ghcr.io
 IMAGE_REPO ?= benc-uk/dotnet-demoapp
 IMAGE_TAG ?= latest
 
-DEPLOY_RES_GROUP ?= temp-demoapps
-DEPLOY_REGION ?= uksouth
-DEPLOY_SITE_NAME ?= dotnetapp-$(shell git rev-parse --short HEAD)
+# Used by `deploy` target, sets Azure webap defaults, override as required
+AZURE_RES_GROUP ?= temp-demoapps
+AZURE_REGION ?= uksouth
+AZURE_SITE_NAME ?= dotnet-$(shell git rev-parse --short HEAD)
 
+# Used by `test-api` target
 TEST_HOST ?= localhost:5000
 
+# Don't change
 SRC_DIR := src
+TEST_DIR := tests
 
-.PHONY: help lint lint-fix image push run deploy undeploy .EXPORT_ALL_VARIABLES
+.PHONY: help lint lint-fix image push run deploy undeploy test test-report test-api .EXPORT_ALL_VARIABLES
 .DEFAULT_GOAL := help
 
 help:  ## 💬 This help message
@@ -35,12 +40,12 @@ run:  ## 🏃‍ Run locally using Dotnet CLI
 	dotnet run dotnet run -p $(SRC_DIR)/dotnet-demoapp.csproj
 
 deploy:  ## 🚀 Deploy to Azure Web App 
-	az group create -n $(DEPLOY_RES_GROUP) -l $(DEPLOY_REGION) -o table
+	az group create --resource-group $(AZURE_RES_GROUP) --location $(AZURE_REGION) -o table
 	az deployment group create --template-file deploy/webapp.bicep \
-		-g $(DEPLOY_RES_GROUP) \
-		-p webappName=$(DEPLOY_SITE_NAME) \
-		-p webappImage=$(IMAGE_REG)/$(IMAGE_REPO):$(IMAGE_TAG) -o table 
-	@echo "### 🚀 Web app deployed to https://$(DEPLOY_SITE_NAME).azurewebsites.net/"
+		--resource-group $(AZURE_RES_GROUP) \
+		--parameters webappName=$(AZURE_SITE_NAME) \
+		--parameters webappImage=$(IMAGE_REG)/$(IMAGE_REPO):$(IMAGE_TAG) -o table 
+	@echo "### 🚀 Web app deployed to https://$(AZURE_SITE_NAME).azurewebsites.net/"
 
 undeploy:  ## 💀 Remove from Azure 
 	@echo "### WARNING! Going to delete $(DEPLOY_RES_GROUP) 😲"
@@ -50,18 +55,19 @@ test:  ## 🎯 Unit tests with xUnit
 	dotnet test tests/tests.csproj 
 
 test-report:  ## 🤡 Unit tests with xUnit & output report
-	rm -rf tests/TestResults
-	dotnet test tests/tests.csproj --logger html
+	rm -rf $(TEST_DIR)/TestResults
+	dotnet test $(TEST_DIR)/tests.csproj --logger html
 
-test-api:  ## 🚦 Run integration API tests, server must be running!
-	node node_modules/.bin/newman -v > /dev/null 2>&1 || npm install newman
-	node_modules/.bin/newman run tests/postman_collection.json --env-var apphost=$(TEST_HOST)
+test-api: .EXPORT_ALL_VARIABLES  ## 🚦 Run integration API tests, server must be running!
+	cd tests \
+	&& npm install newman \
+	&& ./node_modules/.bin/newman run ./postman_collection.json --env-var apphost=$(TEST_HOST)
 
 clean:  ## 🧹 Clean up project
-	rm -rf node_modules
-	rm -rf package*.json
-	rm -rf tests/TestResults
-	rm -rf tests/bin
-	rm -rf tests/obj
+	rm -rf $(TEST_DIR)/node_modules
+	rm -rf $(TEST_DIR)/package*
+	rm -rf $(TEST_DIR)/TestResults
+	rm -rf $(TEST_DIR)/bin
+	rm -rf $(TEST_DIR)/obj
 	rm -rf $(SRC_DIR)/bin
 	rm -rf $(SRC_DIR)/obj
