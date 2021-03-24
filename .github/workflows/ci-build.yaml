@@ -57,7 +57,7 @@ jobs:
           make push
 
       - name: "Trigger AKS release pipeline"
-        if: github.ref == 'refs/heads/masterZZZZZ'
+        if: github.ref == 'refs/heads/master'
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: "CD Release - AKS"
@@ -65,7 +65,7 @@ jobs:
           inputs: '{ "IMAGE_TAG": "dev-${{ github.run_id }}" }'
 
       - name: "Trigger Azure web app release pipeline"
-        if: github.ref == 'refs/heads/masterZZZZZ'
+        if: github.ref == 'refs/heads/master'
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: "CD Release - Webapp"
