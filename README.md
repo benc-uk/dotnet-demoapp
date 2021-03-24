@@ -33,8 +33,10 @@ lint                 🔎 Lint & format, will not fix but sets exit code on erro
 push                 📤 Push container image to registry
 test-report          🎯 Unit tests with xUnit & output report
 test                 🤡 Unit tests with xUnit
+test-api              🚦 Run integration API tests, server must be running!
 deploy               🚀 Deploy to Azure Web App
 undeploy             💀 Remove from Azure
+clean                🧹 Clean up project
 ```
 
 Make file variables and default values, pass these in when calling `make`, e.g. `make image IMAGE_REPO=blah/foo`
@@ -44,9 +46,9 @@ Make file variables and default values, pass these in when calling `make`, e.g. 
 | IMAGE_REG         | ghcr<span>.</span>io   |
 | IMAGE_REPO        | benc-uk/dotnet-demoapp |
 | IMAGE_TAG         | latest                 |
-| DEPLOY_RES_GROUP  | temp-demoapps          |
-| DEPLOY_REGION     | uksouth                |
-| DEPLOY_SITE_NAME  | dotnetapp-{git-sha}    |
+| AZURE_RES_GROUP   | temp-demoapps          |
+| AZURE_REGION      | uksouth                |
+| AZURE_SITE_NAME   | dotnetapp-{git-sha}    |
 
 Web app will listen on the usual Kestrel port of 5000, but this can be changed by setting the `ASPNETCORE_URLS` environmental variable or with the `--urls` parameter ([see docs](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-3.1)).
 
