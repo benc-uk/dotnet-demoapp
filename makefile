@@ -36,7 +36,10 @@ run:  ## 🏃‍ Run locally using Dotnet CLI
 
 deploy:  ## 🚀 Deploy to Azure Web App 
 	az group create -n $(DEPLOY_RES_GROUP) -l $(DEPLOY_REGION) -o table
-	az deployment group create --template-file deploy/webapp.bicep -g $(DEPLOY_RES_GROUP) -p webappName=$(DEPLOY_SITE_NAME) -o table
+	az deployment group create --template-file deploy/webapp.bicep \
+		-g $(DEPLOY_RES_GROUP) \
+		-p webappName=$(DEPLOY_SITE_NAME) \
+		-p webappImage=$(IMAGE_REG)/$(IMAGE_REPO):$(IMAGE_TAG) -o table 
 	@echo "### 🚀 Web app deployed to https://$(DEPLOY_SITE_NAME).azurewebsites.net/"
 
 undeploy:  ## 💀 Remove from Azure 
