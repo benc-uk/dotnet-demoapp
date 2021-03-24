@@ -10,7 +10,6 @@ namespace dotnet_demoapp.Controllers
     [Route("api/[controller]")]
     public class MonitoringDataController : ControllerBase
     {
-
         private readonly ILogger<MonitoringDataController> _logger;
 
         public MonitoringDataController(ILogger<MonitoringDataController> logger)
@@ -87,7 +86,5 @@ namespace dotnet_demoapp.Controllers
 
             return result;
         }
-
-
     }
 }
