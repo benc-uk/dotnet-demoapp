@@ -56,7 +56,7 @@ test:  ## 🎯 Unit tests with xUnit
 
 test-report:  ## 🤡 Unit tests with xUnit & output report
 	rm -rf $(TEST_DIR)/TestResults
-	dotnet test $(TEST_DIR)/tests.csproj --logger html
+	dotnet test $(TEST_DIR)/tests.csproj --test-adapter-path:. --logger:junit --logger:html
 
 test-api: .EXPORT_ALL_VARIABLES  ## 🚦 Run integration API tests, server must be running!
 	cd tests \
