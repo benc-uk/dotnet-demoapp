@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
-namespace dotnet_demoapp.Pages
+namespace DotnetDemoapp.Pages
 {
     // [Authorize]
     public class SystemInfoModel : PageModel

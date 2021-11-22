@@ -2,7 +2,7 @@
 # Stage 1 - Build/compile app using container
 # =======================================================
 
-ARG IMAGE_BASE=5.0-alpine
+ARG IMAGE_BASE=6.0-alpine
 
 # Build image has SDK and tools (Linux)
 FROM mcr.microsoft.com/dotnet/sdk:$IMAGE_BASE as build

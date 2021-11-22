@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Identity.Web;
 
-namespace dotnet_demoapp.Pages
+namespace DotnetDemoapp.Pages
 {
     // [Authorize]
     public class UserInfoModel : PageModel

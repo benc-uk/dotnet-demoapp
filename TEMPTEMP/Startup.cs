@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.HttpOverrides;
 using System;
 
-namespace dotnet_demoapp
+namespace DotnetDemoapp
 {
     public class Startup
     {

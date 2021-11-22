@@ -1,7 +1,6 @@
-using System;
 using Xunit;
 
-namespace dotnet_demoapp_tests
+namespace DotnetDemoapp_tests
 {
     public class LameUnitTest1
     {
@@ -9,7 +8,7 @@ namespace dotnet_demoapp_tests
         public void TestAThingFalse()
         {
             bool result = false;
-            Assert.False(result, $"{result} should not be true"); 
+            Assert.False(result, $"{result} should not be true");
         }
     }
 
@@ -19,7 +18,7 @@ namespace dotnet_demoapp_tests
         public void TestAThingTrue()
         {
             bool result = true;
-            Assert.True(result, $"{result} should not be false"); 
-        }        
+            Assert.True(result, $"{result} should not be false");
+        }
     }
 }

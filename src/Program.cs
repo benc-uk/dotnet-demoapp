@@ -1,26 +1,38 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Identity.Web;
+using DotnetDemoapp;
 
-namespace dotnet_demoapp
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddRazorPages();
+builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(builder.Configuration)
+                .EnableTokenAcquisitionToCallDownstreamApi()
+                .AddMicrosoftGraph()
+                .AddInMemoryTokenCaches();
+
+var app = builder.Build();
+app.UseStaticFiles();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapRazorPages();
+
+// API routes follow
+app.MapGet("/api/monitor", async () =>
 {
-    public class Program
+    return new
     {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+        cpuPercentage = Convert.ToInt32(await MonitoringHelper.GetCpuUsageForProcess()),
+        workingSet = Environment.WorkingSet
+    };
+});
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                })
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.AddConsole();
-                });
-    }
-}
+app.MapGet("/api/weather/{posLat:double}/{posLong:double}", async (double posLat, double posLong) =>
+{
+    string apiKey = builder.Configuration.GetValue<string>("Weather:ApiKey");
+    (int status, string data) = await WeatherHelper.GetOpenWeather(apiKey, posLat, posLong);
+    return status == 200 ? Results.Content(data, "application/json") : Results.StatusCode(status);
+});
+
+// Easy to miss this, starting the whole app and server!
+app.Run();
