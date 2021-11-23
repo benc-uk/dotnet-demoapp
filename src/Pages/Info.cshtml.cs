@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DotnetDemoapp.Pages
 {
@@ -31,6 +28,10 @@ namespace DotnetDemoapp.Pages
             // Try to discover if we're inside a container and kubernetes, doesn't work with Windows containers, but whatever
             isInContainer = (System.IO.File.Exists("/.dockerenv"));
             isInKubernetes = (System.IO.Directory.Exists("/var/run/secrets/kubernetes.io"));
+            if (isInKubernetes)
+            {
+                isInContainer = true;
+            }
 
             // Hostname and OS info
             hostname = System.Environment.MachineName;

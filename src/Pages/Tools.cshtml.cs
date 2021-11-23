@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -35,7 +34,6 @@ public class ToolsModel : PageModel
             {
                 message = "Failed " + ex.ToString();
             }
-
         }
 
         // Just throw an exception
@@ -65,7 +63,7 @@ public class ToolsModel : PageModel
             }
 
             time = sw.ElapsedMilliseconds / 1000.0;
-            message = $"I calculated a really big number {loops} million times!, it took {time} seconds!";
+            message = $"I calculated a really big number {loops} million times! It took {time} seconds!";
         }
     }
 }

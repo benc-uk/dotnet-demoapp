@@ -1,36 +1,37 @@
 ﻿@page "{action?}/{value?}"
 @model ToolsModel
 @{
-    ViewData["Title"] = "Tools";
+  ViewData["Title"] = "Tools";
 }
 
-<div class="card mb-3">
-  <div class="card-header bg-info text-white"> <i class="fas fa-wrench"></i> Tools</div>
-  
-  @if(Model.message.Length > 0) {
-    <div class="alert alert-warning alert-dismissible fade show m-3" role="alert" data-dismiss="alert" aria-label="Close">
-      <p class="h3">@Model.message</p>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+<div class="card shadow-lg">
+  <div class="card-header h3 bg-info text-white"> <i class="fas fa-fw fa-tools"></i> Tools</div>
+
+  @if (Model.message.Length > 0)
+  {
+    <div class="alert alert-primary alert-dismissible text-dark m-2" role="alert" data-bs-dismiss="alert"
+    aria-label="Close">
+      <h4>@Model.message</h4>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   }
 
   <div class="card-body">
     <p>
-      <a class="btn btn-warning btn-lg w-25" href="#" onclick="doLoad()">CPU Load</a> &nbsp; Generate CPU load, running 
+      <a class="btn btn-warning btn-lg w-25" href="#" onclick="doLoad()">CPU Load</a> &nbsp; Generate CPU load, running
       <input id="iter" value="20" size="3" required type="number" min="1" max="500" /> iterations
     </p>
     <p>
       <a class="btn btn-warning btn-lg w-25" href="#" onclick="doAlloc()">Alloc Memory</a> &nbsp; Force allocation of
       <input id="mem" value="50" size="3" required type="number" min="1" max="5000" /> Mbytes of memory
-    </p>      
+    </p>
     <p>
-      <a class="btn btn-warning btn-lg w-25" href="/tools/exception">Exception</a> &nbsp; Error page, will trigger exception
-    </p>  
+      <a class="btn btn-warning btn-lg w-25" href="/tools/exception">Exception</a> &nbsp; Error page, will trigger
+      exception
+    </p>
     <p>
       <a class="btn btn-warning btn-lg w-25" href="/tools/gc">Garbage Collect</a> &nbsp; Force garbage collector to run
-    </p>            
+    </p>
     <p>
       <a class="btn btn-warning btn-lg w-25" href="/pagemissing">404 Page</a> &nbsp; Trigger a 404
     </p>
@@ -44,5 +45,5 @@
 
   function doAlloc() {
     location.href = '/tools/alloc/' + document.getElementById('mem').value;
-  }  
+  }
 </script>

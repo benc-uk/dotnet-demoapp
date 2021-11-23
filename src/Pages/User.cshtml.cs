@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
-using Microsoft.Identity.Web;
 
 namespace DotnetDemoapp.Pages
 {
-    // [Authorize]
+    [Authorize]
     public class UserInfoModel : PageModel
     {
         private readonly ILogger<UserInfoModel> _logger;
-        readonly ITokenAcquisition _tokenAcquisition;
+        private readonly GraphServiceClient _graphServiceClient;
+
         public string username { get; private set; } = "";
         public string oid { get; private set; } = "";
         public string name { get; private set; } = "";
@@ -26,10 +20,10 @@ namespace DotnetDemoapp.Pages
         public Dictionary<string, string> graphData = new Dictionary<string, string>();
         public byte[] graphPhoto;
 
-        public UserInfoModel(ILogger<UserInfoModel> logger, ITokenAcquisition tokenAcquisition)
+        public UserInfoModel(ILogger<UserInfoModel> logger, GraphServiceClient graphServiceClient)
         {
             _logger = logger;
-            _tokenAcquisition = tokenAcquisition;
+            _graphServiceClient = graphServiceClient;
         }
 
         public async Task<IActionResult> OnGet()
@@ -60,36 +54,23 @@ namespace DotnetDemoapp.Pages
             // Acquire the access token
             try
             {
-                string[] scopes = new string[] { "user.read" };
-                string accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(scopes);
-
-                // Create a client
-                var graphClient = new GraphServiceClient(
-                new DelegateAuthenticationProvider(
-                (requestMessage) =>
-                {
-                    requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
-
-                    return Task.FromResult(0);
-                }));
-
-                // Fetch user details
-                var user = await graphClient.Me
+                // Fetch user details from Graph API
+                var graphDetails = await _graphServiceClient.Me
                 .Request()
                 .GetAsync();
 
-                graphData.Add("UPN", user.UserPrincipalName);
-                graphData.Add("Given Name", user.GivenName);
-                graphData.Add("Display Name", user.DisplayName);
-                graphData.Add("Office", user.OfficeLocation);
-                graphData.Add("Mobile", user.MobilePhone);
-                graphData.Add("Other Phone", user.BusinessPhones.Count() > 0 ? user.BusinessPhones.First() : "");
-                graphData.Add("Job Title", user.JobTitle);
+                graphData.Add("UPN", graphDetails.UserPrincipalName);
+                graphData.Add("Given Name", graphDetails.GivenName);
+                graphData.Add("Display Name", graphDetails.DisplayName);
+                graphData.Add("Office", graphDetails.OfficeLocation);
+                graphData.Add("Mobile", graphDetails.MobilePhone);
+                graphData.Add("Other Phone", graphDetails.BusinessPhones.Count() > 0 ? graphDetails.BusinessPhones.First() : "");
+                graphData.Add("Job Title", graphDetails.JobTitle);
 
-                // Fetch user photo
+                // Fetch user photo, this used to fail with MSA accounts hence the extra try/catch
                 try
                 {
-                    Stream pictureStream = await graphClient
+                    Stream pictureStream = await _graphServiceClient
                     .Me
                     .Photos["432x432"]
                     .Content
@@ -106,6 +87,12 @@ namespace DotnetDemoapp.Pages
             }
             catch (Exception)
             {
+                // Cookie seems to get out of sync with the token cache when hotreloading the page
+                // This is a horrible hack
+                foreach (var cookie in Request.Cookies.Keys)
+                {
+                    Response.Cookies.Delete(cookie);
+                }
                 return Redirect("/");
             }
             return Page();
