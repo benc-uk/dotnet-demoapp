@@ -31,14 +31,14 @@ jobs:
       - name: "Upload test results"
         uses: actions/upload-artifact@v2
         # Disabled when running locally with the nektos/act tool
-        if: ${{ always() && !env.ACT }}
+        if: ${{ always() }}
         with:
           name: test-results
           path: tests/TestResults/
 
       - name: "Publish test results"
         uses: EnricoMi/publish-unit-test-result-action@v1
-        if: ${{ always() && !env.ACT }}
+        if: ${{ always() }}
         with:
           files: tests/TestResults/TestResults.xml
 
@@ -69,13 +69,5 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: "CD Release - AKS"
-          token: ${{ secrets.GH_PAT }}
-          inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
-
-      - name: "Trigger Azure web app release pipeline"
-        if: github.ref == 'refs/heads/master'
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: "CD Release - Webapp"
           token: ${{ secrets.GH_PAT }}
           inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'

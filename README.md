@@ -165,7 +165,6 @@ Environmental Variables:
 - `AzureAd__ClientSecret`: You app's client secret
 - `AzureAd__Instance`: Set to `https://login.microsoftonline.com/`
 - `AzureAd__TenantId`: Set to `common`
-- `AzureAd__CallbackPath`: Set to `/signin-oidc`
 
 If running locally, and using appsettings.Development.json, this can be configured as follows
 
@@ -175,7 +174,6 @@ If running locally, and using appsettings.Development.json, this can be configur
   "ClientId": "<change me>",
   "ClientSecret": "<change me>",
   "TenantId": "common",
-  "CallbackPath": "/signin-oidc"
 }
 ```
 

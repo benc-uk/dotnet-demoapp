@@ -14,5 +14,5 @@ azure-pipelines.yml
 **/obj/*
 out/*
 TestResults/*
-appsettings.json
-appsettings.Development.json
+**/appsettings.json
+**/appsettings.Development*

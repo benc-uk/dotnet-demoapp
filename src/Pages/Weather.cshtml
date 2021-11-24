@@ -1,41 +1,30 @@
 @page
 @{
-    ViewData["Title"] = "System Info";
+  ViewData["Title"] = "System Info";
 }
 
-<div class="card mb-3">
-  <div class="card-header bg-info text-white"> <i class="fas fa-cloud-sun-rain"></i> Weather</div>
+<link rel="stylesheet" href="/open-weather-icons/css/open-weather-icons.css" />
+
+<div class="card shadow-lg">
+  <div class="card-header bg-info h3 text-white">
+    <i class="fa fa-fw fa-globe"></i>
+    Geolocated Weather
+    <span id="location"></span>
+  </div>
   <div class="card-body">
-    <!-- Message box -->
-    <div class="alert alert-danger fade" role="alert" id="errorBox" style="color: #222"></div>
-    
-    <!-- Spinner to show while loading -->
-    <p align="center" id="spinner">
-      <img src="img/spinner.gif" >
-    </p>
+    <div class="alert alert-warning fade text-dark" role="alert" id="error"></div>
 
-    <table>
-      <tr>
-        <td> 
-          <!-- Used by skycons.js to show an animated weather icon -->
-          <canvas id="weather_icon" width="256" height="256"></canvas> 
-        </td>
-        <td class="weather-info">
-          <!-- Table populated with results -->
-          <ul id="weather-list"></ul>
-        </td>
-      </tr>
-    </table>  
-
+    <div class="row">
+      <div class="col-7">
+        <ul id="weather-list" class="h4"></ul>
+      </div>
+      <div class="col"><i id="weatherIcon" class="owi"></i></div>
+    </div>
   </div>
 </div>
 
-<div>
-<img src="img/darksky.png" height="64px"/>
+<div class="p-4">
+  <img src="img/open-weather.png" height="64px" />
 </div>
 
-<!-- skycons script, see https://darkskyapp.github.io/skycons/  -->
-<script src='js/skycons.js'></script>
-
-<!-- Our main weather script for calling the API and displaying results -->
-<script src='js/weather.js'></script>
+<script src="js/weather.js"></script>

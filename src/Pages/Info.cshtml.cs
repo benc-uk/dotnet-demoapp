@@ -1,16 +1,18 @@
-﻿using System;
+﻿using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
-namespace dotnet_demoapp.Pages
+namespace DotnetDemoapp.Pages
 {
     // [Authorize]
     public class SystemInfoModel : PageModel
     {
         private readonly ILogger<SystemInfoModel> _logger;
+        private readonly TelemetryClient _telemetryClient;
+        private readonly IConfiguration _config;
+
         public bool isInContainer { get; private set; } = false;
         public bool isInKubernetes { get; private set; } = false;
+        public bool isAppInsightsEnabled { get; private set; } = false;
         public string hostname { get; private set; } = "";
         public string osDesc { get; private set; } = "";
         public string osArch { get; private set; } = "";
@@ -21,9 +23,10 @@ namespace dotnet_demoapp.Pages
         public string physicalMem { get; private set; } = "";
         public Dictionary<string, string> envVars { get; private set; } = new Dictionary<string, string>();
 
-        public SystemInfoModel(ILogger<SystemInfoModel> logger)
+        public SystemInfoModel(ILogger<SystemInfoModel> logger, IConfiguration config)
         {
             _logger = logger;
+            _config = config;
         }
 
         public void OnGet()
@@ -31,6 +34,12 @@ namespace dotnet_demoapp.Pages
             // Try to discover if we're inside a container and kubernetes, doesn't work with Windows containers, but whatever
             isInContainer = (System.IO.File.Exists("/.dockerenv"));
             isInKubernetes = (System.IO.Directory.Exists("/var/run/secrets/kubernetes.io"));
+            if (isInKubernetes)
+            {
+                isInContainer = true;
+            }
+
+            isAppInsightsEnabled = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY") != null || _config.GetSection("ApplicationInsights:InstrumentationKey").Exists();
 
             // Hostname and OS info
             hostname = System.Environment.MachineName;

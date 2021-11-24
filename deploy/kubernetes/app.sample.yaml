@@ -11,7 +11,6 @@ image:
 service:
   targetPort: 5000
   type: LoadBalancer
-
 # secretEnv:
 #   Weather__ApiKey:
 #     secretName: dotnet-secrets
@@ -25,10 +24,10 @@ service:
 #   AzureAd__ClientId: __CHANGE_ME__
 #   AzureAd__Instance: __CHANGE_ME__
 #   AzureAd__TenantId: __CHANGE_ME__
-#   AzureAd__CallbackPath: /signin-oidc
 
 # ingress:
 #   enabled: true
+#   className: nginx
 #   host: __CHANGE_ME__
 #   annotations:
 #     nginx.ingress.kubernetes.io/ssl-redirect: "true"
