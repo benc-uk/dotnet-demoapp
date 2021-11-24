@@ -1,6 +1,6 @@
-# .NET Core - Demo Web Application
+# .NET - Demo Web Application
 
-This is a simple .NET Core web app using Razor pages and MVC. It was created from the `dotnet new webapp` template and modified adding Bootstrap v4, Fontawesome and other packages/features.
+This is a simple .NET web app using the new minimal hosting model, and Razor pages. It was created from the `dotnet new webapp` template and modified adding custom APIs, Bootstrap v5, Microsoft Identity and other packages/features.
 
 The app has been designed with cloud native demos & containers in mind, in order to provide a real working application for deployment, something more than "hello-world" but with the minimum of pre-reqs. It is not intended as a complete example of a fully functioning architecture or complex software design.
 
@@ -11,7 +11,7 @@ The app has several basic pages accessed from the top navigation menu, some of w
 - **'Info'** - Will show system & runtime information, and will also display if the app is running from within a Docker container and Kubernetes.
 - **'Tools'** - Some tools useful in demos, such a forcing CPU load (for autoscale demos), and error/exception pages for use with App Insights or other monitoring tool.
 - **'Monitoring'** - Displays realtime CPU load and memory working set charts, fetched from an REST API (/api/monitoringdata) and displayed using chart.js
-- **'Weather'** - (Optional) Gets the location of the client page (with HTML5 Geolocation). The resulting location is used to fetch a weather forecast from the [Dark Sky](http://darksky.net) weather API
+- **'Weather'** - (Optional) Gets the location of the client page (with HTML5 Geolocation). The resulting location is used to fetch a weather forecast from the [OpenWeather API](https://openweathermap.org/)
 - **'User Account'** - (Optional) When configured with Azure AD (application client id and secret) user login button will be enabled, and an user-account details page enabled, which calls the Microsoft Graph API
 
 ![screen](https://user-images.githubusercontent.com/14982936/71717446-0bc47400-2e10-11ea-8db2-1db5b991d566.png)
@@ -24,7 +24,6 @@ The app has several basic pages accessed from the top navigation menu, some of w
 
 Live instances:
 
-[![](https://img.shields.io/website?label=Hosted%3A%20Azure%20App%20Service&up_message=online&url=https%3A%2F%2Fdotnet-demoapp.azurewebsites.net%2F)](https://dotnet-demoapp.azurewebsites.net/)  
 [![](https://img.shields.io/website?label=Hosted%3A%20Kubernetes&up_message=online&url=https%3A%2F%2Fdotnet-demoapp.kube.benco.io%2F)](https://dotnet-demoapp.kube.benco.io/)
 
 # Running and Testing Locally
@@ -32,7 +31,7 @@ Live instances:
 ### Pre-reqs
 
 - Be using Linux, WSL or MacOS, with bash, make etc
-- [.NET Core / .NET 5](https://docs.microsoft.com/en-us/dotnet/core/install/linux) - for running locally, linting, running tests etc
+- [.NET 6](https://docs.microsoft.com/en-us/dotnet/core/install/linux) - for running locally, linting, running tests etc
 - [Docker](https://docs.docker.com/get-docker/) - for running as a container, or image build and push
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-linux) - for deployment to Azure
 
@@ -49,17 +48,15 @@ A standard GNU Make file is provided to help with running and building locally.
 ```txt
 $ make
 
-help                 ❓ This help message
-run                  🏃‍ Run locally using Dotnet CLI
-image                🔨 Build container image from Dockerfile
-lint-fix             📜 Lint & format, will try to fix errors and modify code
+help                 💬 This help message
 lint                 🔎 Lint & format, will not fix but sets exit code on error
+image                🔨 Build container image from Dockerfile
 push                 📤 Push container image to registry
-test-report          🎯 Unit tests with xUnit & output report
-test                 🤡 Unit tests with xUnit
-test-api              🚦 Run integration API tests, server must be running!
-deploy               🚀 Deploy to Azure Web App
+run                  🏃‍ Run locally using Dotnet CLI
+deploy               🚀 Deploy to Azure Container App
 undeploy             💀 Remove from Azure
+test                 🎯 Unit tests with xUnit
+test-report          🤡 Unit tests with xUnit & output report
 clean                🧹 Clean up project
 ```
 
@@ -70,13 +67,11 @@ Make file variables and default values, pass these in when calling `make`, e.g. 
 | IMAGE_REG         | ghcr<span>.</span>io   |
 | IMAGE_REPO        | benc-uk/dotnet-demoapp |
 | IMAGE_TAG         | latest                 |
-| AZURE_RES_GROUP   | temp-demoapps          |
-| AZURE_REGION      | uksouth                |
-| AZURE_SITE_NAME   | dotnetapp-{git-sha}    |
+| AZURE_RES_GROUP   | demoapps               |
+| AZURE_REGION      | northeurope            |
+| AZURE_APP_NAME    | dotnet-demoapp         |
 
-Web app will listen on the usual Kestrel port of 5000, but this can be changed by setting the `ASPNETCORE_URLS` environmental variable or with the `--urls` parameter ([see docs](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-3.1)).
-
-Tested with Dotnet Core v3.0, 3.1 & 5.0
+Web app will listen on the usual Kestrel port of 5000, but this can be changed by setting the `ASPNETCORE_URLS` environmental variable or with the `--urls` parameter ([see docs](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-6.0)).
 
 # Containers
 
@@ -118,7 +113,7 @@ Enable this by setting `ApplicationInsights__InstrumentationKey`
 
 The app has been instrumented with the Application Insights SDK, it will however need to be configured to point to your App Insights instance/workspace. All requests will be tracked, as well as dependant calls to other APIs, exceptions & errors will also be logged
 
-[This article](https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core) has more information on monitoring .NET Core with App Insights
+[This article](https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core) has more information on monitoring .NET with App Insights
 
 If running locally, and using appsettings.Development.json, this can be configured as follows
 
@@ -132,7 +127,7 @@ If running locally, and using appsettings.Development.json, this can be configur
 
 Enable this by setting `Weather__ApiKey`
 
-This will require a API key from Dark Sky, you can [sign up for free and get one here](https://darksky.net/dev). The page uses a browser API for geolocation to fetch the user's location.
+This will require a API key from OpenWeather, you can [sign up for free and get one here](https://openweathermap.org/). The page uses a browser API for geolocation to fetch the user's location.
 However, the `geolocation.getCurrentPosition()` browser API will only work when the site is served via HTTPS or from localhost. As a fallback, weather for London, UK will be show if the current position can not be obtained
 
 If running locally, and using appsettings.Development.json, this can be configured as follows
@@ -147,7 +142,7 @@ If running locally, and using appsettings.Development.json, this can be configur
 
 Enable this feature by setting several 'AzureAd' environmental variables, once enabled, a 'Login' button will be displayed on the main top nav bar.
 
-This uses [Microsoft.Identity.Web](https://github.com/AzureAD/microsoft-identity-web) which is a library allowing .NET Core web apps to use the Microsoft Identity Platform (i.e. Azure AD v2.0 endpoint)
+This uses [Microsoft.Identity.Web](https://github.com/AzureAD/microsoft-identity-web) which is a library allowing .NET web apps to use the Microsoft Identity Platform (i.e. Azure AD v2.0 endpoint)
 
 In addition the user account page shows details & photo retrieved from the Microsoft Graph API
 
@@ -177,25 +172,19 @@ If running locally, and using appsettings.Development.json, this can be configur
 }
 ```
 
-## Running in Azure App Service (Linux)
+## Running in Azure - Container App
 
-If you want to deploy to an Azure Web App as a container (aka Linux Web App), a Bicep template is provided in the [deploy](deploy/) directory
+If you want to deploy to an Azure Container App, a Bicep template is provided in the [deploy](deploy/) directory
 
-For a super quick deployment, use `make deploy` which will deploy to a resource group, temp-demoapps and use the git ref to create a unique site name
+For a super quick deployment, use `make deploy` which will deploy to a resource group, demoapps and deploy the latest image hosted in GitHub
 
 ```bash
 make deploy
 ```
 
-You can also very quickly deploy to Azure App Service directly with the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/) and `az webapp up`. Note. `<app-name>` must be globally unique. Change the sku to a larger size, e.g. `P1V2` for a much faster deployment
-
-```bash
-cd src
-az webapp up --sku F1 --name <app-name>
-```
-
 # Updates
 
+- Nov 2021 - Large scale rewrite to .NET 6
 - Mar 2021 - Update to deployment, added dummy unit tests and makefile
 - Nov 2020 - Updated to .NET 5
 - Nov 2020 - New GitHub pipelines & container registry

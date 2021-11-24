@@ -40,7 +40,7 @@ deploy: ## 🚀 Deploy to Azure Container App
 	az deployment group create --template-file deploy/container-app.bicep \
 		--resource-group $(AZURE_RES_GROUP) \
 		--parameters appName=$(AZURE_APP_NAME) \
-		--parameters image=$(IMAGE_REG)/$(IMAGE_REPO):$(IMAGE_TAG) -o table --parameters @deploy/myparams.json
+		--parameters image=$(IMAGE_REG)/$(IMAGE_REPO):$(IMAGE_TAG) -o table
 	@sleep 1
 	@echo "### 🚀 App deployed & available here: $(shell az deployment group show --resource-group $(AZURE_RES_GROUP) --name container-app --query "properties.outputs.appURL.value" -o tsv)/"
 
