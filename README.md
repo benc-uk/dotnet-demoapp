@@ -99,8 +99,6 @@ A working set of CI and CD release GitHub Actions workflows are provided `.githu
 
 [![](https://img.shields.io/github/workflow/status/benc-uk/dotnet-demoapp/CD%20Release%20-%20AKS?label=release-kubernetes)](https://github.com/benc-uk/dotnet-demoapp/actions?query=workflow%3A%22CD+Release+-+AKS%22)
 
-[![](https://img.shields.io/github/workflow/status/benc-uk/dotnet-demoapp/CD%20Release%20-%20Webapp?label=release-azure)](https://github.com/benc-uk/dotnet-demoapp/actions?query=workflow%3A%22CD+Release+-+Webapp%22)
-
 [![](https://img.shields.io/github/last-commit/benc-uk/dotnet-demoapp)](https://github.com/benc-uk/dotnet-demoapp/commits/master)
 
 # Optional Features
