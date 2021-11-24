@@ -8,11 +8,11 @@ Typical uses would be deployment to Kubernetes, demos of Docker, CI/CD (build pi
 
 The app has several basic pages accessed from the top navigation menu, some of which are only lit up when certain configuration variables are set (see 'Optional Features' below):
 
-- **'Info'** - Will show system & runtime information, and will also display if the app is running from within a Docker container and Kubernetes.
-- **'Tools'** - Some tools useful in demos, such a forcing CPU load (for autoscale demos), and error/exception pages for use with App Insights or other monitoring tool.
-- **'Monitoring'** - Displays realtime CPU load and memory working set charts, fetched from an REST API (/api/monitoringdata) and displayed using chart.js
-- **'Weather'** - (Optional) Gets the location of the client page (with HTML5 Geolocation). The resulting location is used to fetch a weather forecast from the [OpenWeather API](https://openweathermap.org/)
-- **'User Account'** - (Optional) When configured with Azure AD (application client id and secret) user login button will be enabled, and an user-account details page enabled, which calls the Microsoft Graph API
+- **Info** - Will show system & runtime information, and will also display if the app is running from within a Docker container and Kubernetes.
+- **Tools** - Some tools useful in demos, such a forcing CPU load (for autoscale demos), and error/exception pages for use with App Insights or other monitoring tool.
+- **Monitoring** - Displays realtime CPU load and memory working set charts, fetched from an REST API and displayed using chart.js
+- **Weather** - (Optional) Gets the location of the client page (with HTML5 Geolocation). The resulting location is used to fetch a weather forecast from the [OpenWeather API](https://openweathermap.org/)
+- **User Account** - (Optional) When configured with Azure AD (application client id and secret) user login button will be enabled, and an user-account details page enabled, which calls the Microsoft Graph API
 
 ![screen](https://user-images.githubusercontent.com/14982936/71717446-0bc47400-2e10-11ea-8db2-1db5b991d566.png)
 ![screen](https://user-images.githubusercontent.com/14982936/71717448-0bc47400-2e10-11ea-8bf0-5115d4c8c4a4.png)
@@ -91,19 +91,13 @@ The app can easily be deployed to Kubernetes using Helm, see [deploy/kubernetes/
 
 # GitHub Actions CI/CD
 
-A working set of CI and CD release GitHub Actions workflows are provided `.github/workflows/`, automated builds are run in GitHub hosted runners
+A set of CI and CD release GitHub Actions workflows are provided in `.github/workflows/`, automated builds are run in GitHub hosted runners
 
-### [GitHub Actions](https://github.com/benc-uk/dotnet-demoapp/actions)
-
-[![](https://img.shields.io/github/workflow/status/benc-uk/dotnet-demoapp/CI%20Build%20App)](https://github.com/benc-uk/dotnet-demoapp/actions?query=workflow%3A%22CI+Build+App%22)
-
-[![](https://img.shields.io/github/workflow/status/benc-uk/dotnet-demoapp/CD%20Release%20-%20AKS?label=release-kubernetes)](https://github.com/benc-uk/dotnet-demoapp/actions?query=workflow%3A%22CD+Release+-+AKS%22)
-
-[![](https://img.shields.io/github/last-commit/benc-uk/dotnet-demoapp)](https://github.com/benc-uk/dotnet-demoapp/commits/master)
+[![](https://img.shields.io/github/workflow/status/benc-uk/dotnet-demoapp/CI%20Build%20App)](https://github.com/benc-uk/dotnet-demoapp/actions?query=workflow%3A%22CI+Build+App%22) [![](https://img.shields.io/github/workflow/status/benc-uk/dotnet-demoapp/CD%20Release%20-%20AKS?label=release-kubernetes)](https://github.com/benc-uk/dotnet-demoapp/actions?query=workflow%3A%22CD+Release+-+AKS%22) [![](https://img.shields.io/github/last-commit/benc-uk/dotnet-demoapp)](https://github.com/benc-uk/dotnet-demoapp/commits/master)
 
 # Optional Features
 
-The app will start up and run with zero configuration, however the only features that will be available will be the Info, Tools & Monitoring views. The following optional features can be enabled:
+The app will start up and run with zero configuration, however the only features that will be available will be the *Info*, *Tools* & *Monitoring* views. The following optional features can be enabled:
 
 ### Application Insights
 
@@ -174,11 +168,13 @@ If running locally, and using appsettings.Development.json, this can be configur
 
 If you want to deploy to an Azure Container App, a Bicep template is provided in the [deploy](deploy/) directory
 
-For a super quick deployment, use `make deploy` which will deploy to a resource group, demoapps and deploy the latest image hosted in GitHub
+For a quick deployment, use `make deploy` which will create a resource group, the Azure Container App instance (with supporting resources) and deploy the latest image to it
 
 ```bash
 make deploy
 ```
+
+> Note. Azure Container App doesn't currently support HTTP header forwarding, so Azure AD sign-in will not work as it mis-redirects to the wrong URL
 
 # Updates
 
