@@ -10,7 +10,7 @@
 
     <table class="table table-hover table-striped table">
       <tr>
-        <td><i class="fa fa-fw fa-cube"></i>&nbsp; Containerized:</td>
+        <td><i class="fa fa-fw fa-cube"></i> Containerized:</td>
         @if (Model.isInContainer)
         {
           <td>Looks like we're running in a Docker container! &#x1F604;</td>
@@ -21,7 +21,7 @@
         }
       </tr>
       <tr>
-        <td><i class="fa fa-fw fa-project-diagram"></i>&nbsp; Kubernetes:</td>
+        <td><i class="fa fa-fw fa-project-diagram"></i> Kubernetes:</td>
         @if (Model.isInKubernetes)
         {
           <td>We're also running in a Kubernetes pod! &#x1f44d;</td>
@@ -32,23 +32,34 @@
         }
       </tr>
       <tr>
-        <td><i class="fa fa-fw fa-home"></i>&nbsp; Hostname:</td>
+        <td><i class="fa fa-fw fa-microscope"></i> App Insights:</td>
+        @if (Model.isAppInsightsEnabled)
+        {
+          <td>Reporting telemetry to Azure Application Insights</td>
+        }
+        else
+        {
+          <td>Not enabled</td>
+        }
+      </tr>
+      <tr>
+        <td><i class="fa fa-fw fa-home"></i> Hostname:</td>
         <td>@Model.hostname</td>
       </tr>
       <tr>
-        <td><i class="fas fa-fw fa-cogs"></i>&nbsp; OS Details:</td>
+        <td><i class="fas fa-fw fa-cogs"></i> OS Details:</td>
         <td>@Model.osDesc</td>
       </tr>
       <tr>
-        <td><i class="fa fa-fw fa-microchip"></i>&nbsp; Architecture:</td>
+        <td><i class="fa fa-fw fa-microchip"></i> Architecture:</td>
         <td>@Model.osArch - @Model.processorCount cores</td>
       </tr>
       <tr>
-        <td><i class="fab fa-fw fa-codepen"></i>&nbsp; Framework:</td>
+        <td><i class="fab fa-fw fa-codepen"></i> Framework:</td>
         <td>@Model.framework</td>
       </tr>
       <tr>
-        <td><i class="fas fa-fw fa-memory"></i>&nbsp; Memory:</td>
+        <td><i class="fas fa-fw fa-memory"></i> Memory:</td>
         <td>@Model.workingSet MB / @String.Format("{0,12:n} MB", Model.physicalMem)</td>
       </tr>
     </table>

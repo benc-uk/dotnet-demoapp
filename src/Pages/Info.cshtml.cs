@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DotnetDemoapp.Pages
 {
@@ -6,8 +7,12 @@ namespace DotnetDemoapp.Pages
     public class SystemInfoModel : PageModel
     {
         private readonly ILogger<SystemInfoModel> _logger;
+        private readonly TelemetryClient _telemetryClient;
+        private readonly IConfiguration _config;
+
         public bool isInContainer { get; private set; } = false;
         public bool isInKubernetes { get; private set; } = false;
+        public bool isAppInsightsEnabled { get; private set; } = false;
         public string hostname { get; private set; } = "";
         public string osDesc { get; private set; } = "";
         public string osArch { get; private set; } = "";
@@ -18,9 +23,10 @@ namespace DotnetDemoapp.Pages
         public string physicalMem { get; private set; } = "";
         public Dictionary<string, string> envVars { get; private set; } = new Dictionary<string, string>();
 
-        public SystemInfoModel(ILogger<SystemInfoModel> logger)
+        public SystemInfoModel(ILogger<SystemInfoModel> logger, IConfiguration config)
         {
             _logger = logger;
+            _config = config;
         }
 
         public void OnGet()
@@ -32,6 +38,8 @@ namespace DotnetDemoapp.Pages
             {
                 isInContainer = true;
             }
+
+            isAppInsightsEnabled = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY") != null || _config.GetSection("ApplicationInsights:InstrumentationKey").Exists();
 
             // Hostname and OS info
             hostname = System.Environment.MachineName;
