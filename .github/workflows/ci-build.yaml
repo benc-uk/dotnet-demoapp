@@ -10,8 +10,8 @@ on:
   pull_request:
 
 env:
-  IMAGE_REG: ghcr.io
-  IMAGE_REPO: benc-uk/dotnet-demoapp
+  IMAGE_REG: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+  IMAGE_REPO: dotnet6
 
 jobs:
   test:
@@ -54,20 +54,19 @@ jobs:
       - name: "Create datestamp image tag"
         run: echo "IMAGE_TAG=$(date +%d-%m-%Y.%H%M)" >> $GITHUB_ENV
 
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
       - name: "Docker build image"
         run: make image
 
       # Only when pushing to default branch (e.g. master or main), then push image to registry
       - name: Push to container registry
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login $IMAGE_REG -u $GITHUB_ACTOR --password-stdin
-          make push
+        run:  make push
 
-      - name: "Trigger AKS release pipeline"
-        if: github.ref == 'refs/heads/master'
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: "CD Release - AKS"
-          token: ${{ secrets.GH_PAT }}
-          inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
+      
