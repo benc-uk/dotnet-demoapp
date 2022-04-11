@@ -24,9 +24,9 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
 
-      - name: "Run linting"
-        # We have to update the path because HOME is set weird in actions runner
-        run: export PATH=$PATH:$HOME/.dotnet/tools && make lint
+      # - name: "Run linting"
+      #   # We have to update the path because HOME is set weird in actions runner
+      #   run: export PATH=$PATH:$HOME/.dotnet/tools && make lint
 
       - name: "Run tests"
         run: make test-report
