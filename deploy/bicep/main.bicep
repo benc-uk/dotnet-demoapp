@@ -20,7 +20,7 @@ param kubernetesVersion string = '1.7.7'
   'azure'
   'kubenet'
 ])
-param networkPlugin string
+param networkPlugin string = 'azure'
 
 @description('Boolean flag to turn on and off of RBAC.')
 param enableRBAC bool = true

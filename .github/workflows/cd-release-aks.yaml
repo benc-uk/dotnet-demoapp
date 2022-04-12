@@ -18,6 +18,8 @@ on:
 env:
   CLUSTER_NAME: srewithazure-aks
   LOCATION: westeurope
+  ACR_NAME: srewithazure 
+  ACR_RG: SREwithAzure
   # HELM_RELEASE: dotnet
   # HELM_NAMESPACE: demoapps
   # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
@@ -49,7 +51,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
         template: deploy/bicep/main.bicep
-        parameters: resourceName=${{env.CLUSTER_NAME}} location=${{env.LOCATION}} dnsPrefix=${{env.CLUSTER_NAME}}-dns workspaceName=${{env.CLUSTER_NAME}}-la
+        parameters: resourceName=${{env.CLUSTER_NAME}} location=${{env.LOCATION}} dnsPrefix=${{env.CLUSTER_NAME}}-dns workspaceName=${{env.CLUSTER_NAME}}-la acrName=${{env.ACR_NAME}} acrResourceGroup=${{env.ACR_RG}}
         failOnStdErr: false
 
   
