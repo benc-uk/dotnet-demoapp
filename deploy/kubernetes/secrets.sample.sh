@@ -1,3 +1,3 @@
-kCHANGEMEubectl create secret generic dotnet-demoapp \
+kubectl create secret generic dotnet-demoapp \
 --from-literal=weatherKey= \
 --from-literal=aadAppSecret=CHANGEME
