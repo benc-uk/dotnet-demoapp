@@ -24,7 +24,7 @@ env:
   CLUSTER_NAME: srewithazure-aks-unai
   LOCATION: westeurope
   ACR_NAME: srewithazure 
-  ACR_RG: SREwithAzure
+  RG: SREwithAzure
   HELM_RELEASE: dotnet
   HELM_NAMESPACE: demoapps
   # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
@@ -56,7 +56,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
         template: deploy/bicep/main.bicep
-        parameters: resourceName=${{env.CLUSTER_NAME}} location=${{env.LOCATION}} dnsPrefix=${{env.CLUSTER_NAME}}-dns workspaceName=${{env.CLUSTER_NAME}}-la acrName=${{env.ACR_NAME}} acrResourceGroup=${{env.ACR_RG}}
+        parameters: resourceName=${{env.CLUSTER_NAME}} location=${{env.LOCATION}} dnsPrefix=${{env.CLUSTER_NAME}}-dns workspaceName=${{env.CLUSTER_NAME}}-la acrName=${{env.ACR_NAME}} acrResourceGroup=${{env.RG}}
         failOnStdErr: false
 
   
@@ -73,13 +73,17 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
 
-      - name: "Set kubeconfig"
-        uses: azure/k8s-set-context@v1
+      # Set the target Azure Kubernetes Service (AKS) cluster. 
+      - uses: azure/aks-set-context@v1
         with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.CLUSTER_KUBECONFIG }}
-          context: ${{ env.CLUSTER_NAME }}
-
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          resource-group: ${{ env.RG }}
+      
+      # Create namespace if doesn't exist
+      - run: |
+          kubectl create namespace ${{ env.HELM_NAMESPACE }} --dry-run=client -o json | kubectl apply -f -
+      
       - name: "Helm release"
         run: |
           helm repo add benc-uk https://benc-uk.github.io/helm-charts
