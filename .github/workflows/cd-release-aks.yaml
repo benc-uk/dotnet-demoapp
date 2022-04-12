@@ -40,7 +40,7 @@ jobs:
   #
   deploy-azure:
     name: Deploy infrastructure to Azure Resource Group
-    if: github.event.inputs.SKIP_INFRA = 'Yes'
+    if: github.event.inputs.SKIP_INFRA == 'Yes'
     runs-on: ubuntu-latest
     # environment:
     #   name: AKS
