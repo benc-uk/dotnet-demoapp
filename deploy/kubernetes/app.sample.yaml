@@ -25,12 +25,12 @@ env:
 #   AzureAd__Instance: __CHANGE_ME__
 #   AzureAd__TenantId: __CHANGE_ME__
 
-# ingress:
-#   enabled: true
-#   className: nginx
-#   host: dotnet-demoapp.kube.unai.io
-#   annotations:
-#     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-#   tls:
-#     enabled: true
-#     secretName: __CHANGE_ME__
+ingress:
+  enabled: true
+  className: nginx
+  host: dotnet-demoapp.kube.unai.io
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  tls:
+    enabled: true
+    secretName: unai-io-cert
