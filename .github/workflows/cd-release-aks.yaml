@@ -49,7 +49,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
         template: deploy/bicep/main.bicep
-        parameters: resourcename=${{CLUSTER_NAME}} location=${{LOCATION}} dnsPrefix=${{CLUSTER_NAME}}-dns workspaceName=${{CLUSTER_NAME}}-la
+        parameters: resourcename=${{env.CLUSTER_NAME}} location=${{env.LOCATION}} dnsPrefix=${{env.CLUSTER_NAME}}-dns workspaceName=${{env.CLUSTER_NAME}}-la
         failOnStdErr: false
 
   
