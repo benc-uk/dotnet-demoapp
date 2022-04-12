@@ -93,19 +93,19 @@ module WorkspaceDeployment_20220412095433 'modules/nested_WorkspaceDeployment_20
   }
 }
 
-module ConnectAKStoACR_9fd845cd_6e76_40aa_99a0_6f0085d73073 'modules/nested_ConnectAKStoACR_9fd845cd_6e76_40aa_99a0_6f0085d73073.bicep' = {
-  name: 'ConnectAKStoACR-9fd845cd-6e76-40aa-99a0-6f0085d73073'
-  scope: resourceGroup(acrResourceGroup)
-  params: {
-    reference_parameters_resourceName_2021_07_01_identityProfile_kubeletidentity_objectId: reference(resourceName, '2021-07-01')
-    resourceId_parameters_acrResourceGroup_Microsoft_ContainerRegistry_registries_parameters_acrName: resourceId(acrResourceGroup, 'Microsoft.ContainerRegistry/registries/', acrName)
-    acrName: acrName
-    guidValue: guidValue
-  }
-  dependsOn: [
-    resourceName_resource
-  ]
-}
+// module ConnectAKStoACR_9fd845cd_6e76_40aa_99a0_6f0085d73073 'modules/nested_ConnectAKStoACR_9fd845cd_6e76_40aa_99a0_6f0085d73073.bicep' = {
+//   name: 'ConnectAKStoACR-9fd845cd-6e76-40aa-99a0-6f0085d73073'
+//   scope: resourceGroup(acrResourceGroup)
+//   params: {
+//     reference_parameters_resourceName_2021_07_01_identityProfile_kubeletidentity_objectId: reference(resourceName, '2021-07-01')
+//     resourceId_parameters_acrResourceGroup_Microsoft_ContainerRegistry_registries_parameters_acrName: resourceId(acrResourceGroup, 'Microsoft.ContainerRegistry/registries/', acrName)
+//     acrName: acrName
+//     guidValue: guidValue
+//   }
+//   dependsOn: [
+//     resourceName_resource
+//   ]
+// }
 
 resource resourceName_resource 'Microsoft.ContainerService/managedClusters@2021-07-01' = {
   location: location
