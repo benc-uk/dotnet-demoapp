@@ -63,6 +63,7 @@ jobs:
   
   configure-aks:
     name: Deploy to AKS with Helm
+    needs: deploy-azure
     runs-on: ubuntu-latest
     # environment:
     #   name: AKS - dotnet-demoapp
