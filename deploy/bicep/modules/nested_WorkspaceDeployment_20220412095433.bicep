@@ -5,12 +5,7 @@ param workspaceRegion string
 param workspaceName string
 
 @description('Select the SKU for your workspace.')
-@allowed([
-  'free'
-  'standalone'
-  'pernode'
-])
-param omsSku string
+param omsSku string = 'PerGB2018'
 
 resource workspaceName_resource 'Microsoft.OperationalInsights/workspaces@2015-11-01-preview' = {
   location: workspaceRegion
