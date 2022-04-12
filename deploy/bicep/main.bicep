@@ -175,15 +175,15 @@ resource resourceName_resource 'Microsoft.ContainerService/managedClusters@2021-
   ]
 }
 
-module ClusterMonitoringMetricPulisherRoleAssignmentDepl_20220412095433 'modules/nested_ClusterMonitoringMetricPulisherRoleAssignmentDepl_20220412095433.bicep' = {
-  name: 'ClusterMonitoringMetricPulisherRoleAssignmentDepl-20220412095433'
-  scope: resourceGroup('dfd808dc-8a3f-4019-9c4d-9901ee75eca1', 'SREwithAzure')
-  params: {
-    reference_parameters_resourceName_addonProfiles_omsAgent_identity_objectId: resourceName_resource.properties
-  }
-  dependsOn: [
-    resourceName_resource
-  ]
-}
+// module ClusterMonitoringMetricPulisherRoleAssignmentDepl_20220412095433 'modules/nested_ClusterMonitoringMetricPulisherRoleAssignmentDepl_20220412095433.bicep' = {
+//   name: 'ClusterMonitoringMetricPulisherRoleAssignmentDepl-20220412095433'
+//   scope: resourceGroup('dfd808dc-8a3f-4019-9c4d-9901ee75eca1', 'SREwithAzure')
+//   params: {
+//     reference_parameters_resourceName_addonProfiles_omsAgent_identity_objectId: resourceName_resource.properties
+//   }
+//   // dependsOn: [
+//   //   '/subscriptions/dfd808dc-8a3f-4019-9c4d-9901ee75eca1/resourceGroups/SREwithAzure/providers/Microsoft.ContainerService/managedClusters/srewithazure-aks'
+//   // ]
+// }
 
 output controlPlaneFQDN string = resourceName_resource.properties.fqdn

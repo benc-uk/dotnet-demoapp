@@ -25,8 +25,8 @@ env:
   LOCATION: westeurope
   ACR_NAME: srewithazure 
   ACR_RG: SREwithAzure
-  # HELM_RELEASE: dotnet
-  # HELM_NAMESPACE: demoapps
+  HELM_RELEASE: dotnet
+  HELM_NAMESPACE: demoapps
   # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
   # AD_CLIENT_ID: 3584ac39-1ab1-4fe6-a3dd-4b2fbedc9d7d
 
