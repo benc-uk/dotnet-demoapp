@@ -87,11 +87,9 @@ jobs:
 
       
       
-      # Create namespace if doesn't exist and create secret
+      # Create namespace if doesn't exist
       - run: |
           kubectl create namespace ${{ env.HELM_NAMESPACE }} --dry-run=client -o json | kubectl apply -f -
-          kubectl config set-context --current --namespace=demoapps
-          kubectl create secret generic dotnet-secrets --from-literal=weatherKey=${{env.Weather_API_Key}}
       - name: "Helm release"
         run: |
           helm repo add benc-uk https://benc-uk.github.io/helm-charts
