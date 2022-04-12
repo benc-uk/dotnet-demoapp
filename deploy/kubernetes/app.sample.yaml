@@ -4,20 +4,20 @@
 #
 
 image:
-  repository: ghcr.io/benc-uk/dotnet-demoapp
+  repository: srewithazure.azurecr.io/dotnet6
   tag: latest
   pullPolicy: Always
 
 service:
   targetPort: 5000
   type: LoadBalancer
-# secretEnv:
-#   Weather__ApiKey:
-#     secretName: dotnet-secrets
-#     secretKey: weatherKey
-#   AzureAd__ClientSecret:
-#     secretName: dotnet-secrets
-#     secretKey: aadAppSecret
+secretEnv:
+  Weather__ApiKey:
+    secretName: dotnet-secrets
+    secretKey: weatherKey
+  # AzureAd__ClientSecret:
+  #   secretName: dotnet-secrets
+  #   secretKey: aadAppSecret
 
 # env:
 #   ApplicationInsights__InstrumentationKey: __CHANGE_ME__
