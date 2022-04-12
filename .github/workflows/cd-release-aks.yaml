@@ -12,6 +12,11 @@ on:
         description: "Image tag to be deployed"
         required: true
         default: "latest"
+  # workflow_run:
+  #   workflows:
+  #     - "CI Build App"
+  #   types:
+  #   - completed
 
 # Note. Required secrets: CLUSTER_KUBECONFIG
 
@@ -32,8 +37,8 @@ jobs:
   deploy-azure:
     name: Deploy infrastructure to Azure Resource Group
     runs-on: ubuntu-latest
-    environment:
-      name: AKS
+    # environment:
+    #   name: AKS
     steps:
 
     # Checkout code

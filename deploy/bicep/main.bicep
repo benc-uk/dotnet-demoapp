@@ -47,7 +47,7 @@ param enableSecretStoreCSIDriver bool = false
 param enableOmsAgent bool = true
 
 @description('Specify the region for your OMS workspace.')
-param workspaceRegion string = 'East US'
+param workspaceRegion string = 'West Europe'
 
 @description('Specify the name of the OMS workspace.')
 param workspaceName string
