@@ -21,3 +21,5 @@ resource workspaceName_resource 'Microsoft.OperationalInsights/workspaces@2015-1
     }
   }
 }
+
+output workspaceId string = workspaceName_resource.id

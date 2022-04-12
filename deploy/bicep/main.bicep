@@ -52,8 +52,8 @@ param workspaceRegion string = 'East US'
 @description('Specify the name of the OMS workspace.')
 param workspaceName string
 
-@description('Specify the resource id of the OMS workspace.')
-param omsWorkspaceId string
+// @description('Specify the resource id of the OMS workspace.')
+// param omsWorkspaceId string
 
 @description('Select the SKU for your workspace.')
 @allowed([
@@ -74,10 +74,9 @@ param guidValue string = newGuid()
 
 module SolutionDeployment_20220412095433 'modules/nested_SolutionDeployment_20220412095433.bicep' = {
   name: 'SolutionDeployment-20220412095433'
-  scope: resourceGroup(split(omsWorkspaceId, '/')[2], split(omsWorkspaceId, '/')[4])
   params: {
     workspaceRegion: workspaceRegion
-    omsWorkspaceId: omsWorkspaceId
+    omsWorkspaceId: WorkspaceDeployment_20220412095433.outputs.workspaceId
   }
   dependsOn: [
     WorkspaceDeployment_20220412095433
@@ -86,7 +85,7 @@ module SolutionDeployment_20220412095433 'modules/nested_SolutionDeployment_2022
 
 module WorkspaceDeployment_20220412095433 'modules/nested_WorkspaceDeployment_20220412095433.bicep' = {
   name: 'WorkspaceDeployment-20220412095433'
-  scope: resourceGroup(split(omsWorkspaceId, '/')[2], split(omsWorkspaceId, '/')[4])
+
   params: {
     workspaceRegion: workspaceRegion
     workspaceName: workspaceName
@@ -158,7 +157,7 @@ resource resourceName_resource 'Microsoft.ContainerService/managedClusters@2021-
       omsAgent: {
         enabled: enableOmsAgent
         config: {
-          logAnalyticsWorkspaceResourceID: omsWorkspaceId
+          logAnalyticsWorkspaceResourceID: WorkspaceDeployment_20220412095433.outputs.workspaceId
         }
       }
     }
