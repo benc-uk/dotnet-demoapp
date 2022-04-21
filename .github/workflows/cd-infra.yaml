@@ -57,11 +57,8 @@ jobs:
         template: deploy/bicep/main.bicep
         parameters: resourceName=${{env.CLUSTER_NAME}} location=${{env.LOCATION}} dnsPrefix=${{env.CLUSTER_NAME}}-dns workspaceName=${{env.CLUSTER_NAME}}-la acrName=${{env.ACR_NAME}} acrResourceGroup=${{env.RG}}
         failOnStdErr: false
-    # Attach ACR to AKS cluster
+    # Attach ACR to AKS cluster (DO MANUAL, IT FAILS FOR SOME REASON)
     - name: Azure CLI script
-      uses: azure/CLI@v1
-      with:
-        azcliversion: 2.30.0
-        inlineScript: |
-          az aks update -n ${{env.CLUSTER_NAME}} -g ${{env.RG}} --attach-acr ${{env.ACR_NAME}}
+      run:
+          az aks update -n $CLUSTER_NAME -g $RG --attach-acr $ACR_NAME
 
