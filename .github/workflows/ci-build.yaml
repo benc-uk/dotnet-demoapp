@@ -86,7 +86,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: "CD INFRA"
+          workflow: "CD infra"
           token: ${{ secrets.GH_PAT }}
           # inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
 
