@@ -8,10 +8,6 @@ name: CD infra
 on:
   workflow_dispatch:
     inputs:
-      IMAGE_TAG:
-        description: "Image tag to be deployed"
-        required: true
-        default: "12-04-2022.1352"
       SKIP_INFRA:
         description: "Skip infrastructure deployment in manual triggers"
         required: false
