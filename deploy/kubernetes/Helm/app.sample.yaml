@@ -11,19 +11,6 @@ image:
 service:
   targetPort: 5000
   type: LoadBalancer
-secretEnv:
-  Weather__ApiKey:
-    secretName: dotnet-secrets
-    secretKey: weatherKey
-  # AzureAd__ClientSecret:
-  #   secretName: dotnet-secrets
-  #   secretKey: aadAppSecret
-
-env:
-  ApplicationInsights__InstrumentationKey: 174db73c-b510-495d-80f2-094f7659e3e2
-#   AzureAd__ClientId: __CHANGE_ME__
-#   AzureAd__Instance: __CHANGE_ME__
-#   AzureAd__TenantId: __CHANGE_ME__
 
 ingress:
   enabled: true
