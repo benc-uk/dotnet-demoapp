@@ -10,15 +10,23 @@ using Microsoft.FeatureManagement.FeatureFilters;
 var builder = WebApplication.CreateBuilder(args);
 
 //UNAI App Configuration
-var connection = builder.Configuration.GetConnectionString("AppConfig");
+// var connection = builder.Configuration.GetConnectionString("AppConfig");
+// builder.Configuration.AddAzureAppConfiguration(options =>
+//                     options.Connect(connection)
+//                         .ConfigureKeyVault(kv =>
+//                         {
+//                             kv.SetCredential(new DefaultAzureCredential());
+//                         })
+//                         .UseFeatureFlags());
+
+var endpoint="https://srewithazure-appconfig.azconfig.io";                     
 builder.Configuration.AddAzureAppConfiguration(options =>
-                    options.Connect(connection)
+                    options.Connect(new Uri(endpoint), new DefaultAzureCredential())
                         .ConfigureKeyVault(kv =>
                         {
                             kv.SetCredential(new DefaultAzureCredential());
                         })
                         .UseFeatureFlags());
-                        
 
 //builder.Services.AddApplicationInsightsTelemetry();
 // UNAI log App Insights instrumentation Key

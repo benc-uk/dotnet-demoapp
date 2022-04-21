@@ -57,6 +57,16 @@ jobs:
       - name: "Create datestamp image tag"
         run: echo "IMAGE_TAG=$(date +%d-%m-%Y.%H%M)" >> $GITHUB_ENV
 
+      # Replace tokens in Dockerfile
+      - uses: cschleiden/replace-tokens@v1
+        with:
+          tokenPrefix: '__'
+          tokenSuffix: '__'
+          files: '["**/Dockerfile"]'
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}  
       - name: 'Build and push image'
         uses: azure/docker-login@v1
         with:
@@ -76,7 +86,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: "CD Release - AKS"
+          workflow: "CD INFRA"
           token: ${{ secrets.GH_PAT }}
-          inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
+          # inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
 

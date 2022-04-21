@@ -48,3 +48,7 @@ myparams.json
 
 # env.txt
 build/env.txt
+
+# k8s local yml
+deploy/kubernetes/k8s-manifest/main.local.yml
+build/Dockerfile.local

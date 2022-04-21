@@ -1,0 +1,23 @@
+#
+# See this Helm chart for options
+# https://github.com/benc-uk/helm-charts/tree/master/webapp
+#
+
+image:
+  repository: srewithazure.azurecr.io/dotnet6
+  tag: localv5
+  pullPolicy: Always
+
+service:
+  targetPort: 5000
+  type: LoadBalancer
+
+ingress:
+  enabled: true
+  className: nginx
+  host: dotnet-demoapp.kube.unai.io
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  tls:
+    enabled: true
+    secretName: unai-io-cert
