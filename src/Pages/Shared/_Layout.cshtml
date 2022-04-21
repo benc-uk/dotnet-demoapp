@@ -2,6 +2,10 @@
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 
+
+@inject Microsoft.FeatureManagement.IFeatureManager featureManager
+
+
 <!doctype html>
 <html lang="en">
 
@@ -58,16 +62,19 @@
             </a>
           </li>
 
-          @if (@Configuration.GetSection("Weather").Exists() &&
-          Configuration.GetSection("Weather").GetValue<String>("ApiKey") != "")
-          {
+          @* @if (@Configuration.GetSection("Weather").Exists() &&
+          Configuration.GetSection("Weather").GetValue<String>("ApiKey") != "") *@
+          @* @if (await featureManager.IsEnabledAsync("WeatherAPI"))
+          { *@
+          <feature name="WeatherAPI">
             <li>
               <a class="nav-link btn btn-primary btn-lg mx-1" href="/weather">
                 <i class="fas fa-cloud-sun-rain fa-fw"></i>
                 Weather
               </a>
             </li>
-          }
+          </feature>
+          @* } *@
         </ul>
 
         <partial name="_UserPartial" />

@@ -1,7 +1,7 @@
 # Used by `image`, `push` & `deploy` targets, override as required
-IMAGE_REG ?= ghcr.io
-IMAGE_REPO ?= benc-uk/dotnet-demoapp
-IMAGE_TAG ?= latest
+IMAGE_REG ?= srewithazure.azurecr.io
+IMAGE_REPO ?= dotnet6
+IMAGE_TAG ?= latest-local
 
 # Used by `deploy` target, sets Azure webap defaults, override as required
 AZURE_RES_GROUP ?= demoapps

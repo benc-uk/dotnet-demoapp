@@ -45,3 +45,6 @@ package.json
 package-lock.json
 tests/TestResults/**
 myparams.json
+
+# env.txt
+build/env.txt
