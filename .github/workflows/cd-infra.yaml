@@ -1,0 +1,71 @@
+#
+# Deploy to Azure Kubernetes Service
+# Using Helm for parameterized deployment
+#
+
+name: CD infra
+
+on:
+  workflow_dispatch:
+    inputs:
+      IMAGE_TAG:
+        description: "Image tag to be deployed"
+        required: true
+        default: "12-04-2022.1352"
+      SKIP_INFRA:
+        description: "Skip infrastructure deployment in manual triggers"
+        required: false
+        default: "No"
+  # workflow_run:
+  #   workflows:
+  #     - "CI Build App"
+  #   types:
+  #   - completed
+
+# Note. Required secrets: CLUSTER_KUBECONFIG
+
+env:
+  CLUSTER_NAME: srewithazure-aks-unai
+  LOCATION: westeurope
+  ACR_NAME: srewithazure 
+  RG: SREwithAzure
+  # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
+  # AD_CLIENT_ID: 3584ac39-1ab1-4fe6-a3dd-4b2fbedc9d7d
+
+jobs:
+  #
+  # Deploy AKS
+  #
+  deploy-azure:
+    name: Deploy infrastructure to Azure Resource Group
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: AKS
+    steps:
+
+    # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy Bicep file
+    - name: deploy
+      if: github.event.inputs.SKIP_INFRA == 'No'
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
+        template: deploy/bicep/main.bicep
+        parameters: resourceName=${{env.CLUSTER_NAME}} location=${{env.LOCATION}} dnsPrefix=${{env.CLUSTER_NAME}}-dns workspaceName=${{env.CLUSTER_NAME}}-la acrName=${{env.ACR_NAME}} acrResourceGroup=${{env.RG}}
+        failOnStdErr: false
+    # Attach ACR to AKS cluster
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.30.0
+        inlineScript: |
+          az aks update -n ${{env.CLUSTER_NAME}} -g ${{env.RG}} --attach-acr ${{env.ACR_NAME}}
+

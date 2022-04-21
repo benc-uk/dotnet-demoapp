@@ -5,7 +5,7 @@
 
 image:
   repository: srewithazure.azurecr.io/dotnet6
-  tag: latest
+  tag: localv5
   pullPolicy: Always
 
 service:

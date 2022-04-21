@@ -1,10 +1,38 @@
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using DotnetDemoapp;
+//for SP and MSI
+using Azure.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.FeatureFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApplicationInsightsTelemetry();
+//UNAI App Configuration
+// var connection = builder.Configuration.GetConnectionString("AppConfig");
+// builder.Configuration.AddAzureAppConfiguration(options =>
+//                     options.Connect(connection)
+//                         .ConfigureKeyVault(kv =>
+//                         {
+//                             kv.SetCredential(new DefaultAzureCredential());
+//                         })
+//                         .UseFeatureFlags());
+
+var endpoint="https://srewithazure-appconfig.azconfig.io";                     
+builder.Configuration.AddAzureAppConfiguration(options =>
+                    options.Connect(new Uri(endpoint), new DefaultAzureCredential())
+                        .ConfigureKeyVault(kv =>
+                        {
+                            kv.SetCredential(new DefaultAzureCredential());
+                        })
+                        .UseFeatureFlags());
+
+//builder.Services.AddApplicationInsightsTelemetry();
+// UNAI log App Insights instrumentation Key
+//var ai_key = builder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString");
+
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:ConnectionString"]);
 
 // Make Azure AD auth an optional feature if the config is present
 if (builder.Configuration.GetSection("AzureAd").Exists() && builder.Configuration.GetSection("AzureAd").GetValue<String>("ClientId") != "")
@@ -13,9 +41,14 @@ if (builder.Configuration.GetSection("AzureAd").Exists() && builder.Configuratio
                     .EnableTokenAcquisitionToCallDownstreamApi()
                     .AddMicrosoftGraph()
                     .AddInMemoryTokenCaches();
+                    
 }
 builder.Services.AddRazorPages().AddMicrosoftIdentityUI();
 
+// Add Azure App Configuration and feature management services to the container.
+builder.Services.AddAzureAppConfiguration()
+                .AddFeatureManagement().AddFeatureFilter<TargetingFilter>();
+builder.Services.AddSingleton<ITargetingContextAccessor, TestTargetingContextAccessor>();
 // ============================================================
 
 var app = builder.Build();
@@ -28,6 +61,10 @@ if (builder.Configuration.GetSection("AzureAd").Exists() && builder.Configuratio
     app.MapControllers();    // Note. Only Needed for Microsoft.Identity.Web.UI
 }
 
+// Use Azure App Configuration middleware for dynamic configuration refresh.
+app.UseAzureAppConfiguration();
+// USED ON LOCAL FOR AZURE AD
+//app.UseHttpsRedirection();  
 app.UseStaticFiles();
 app.MapRazorPages();
 app.UseStatusCodePages("text/html", "<!doctype html><h1>&#128163;HTTP error! Status code: {0}</h1>");
@@ -50,7 +87,15 @@ app.MapGet("/api/weather/{posLat:double}/{posLong:double}", async (double posLat
 {
     string apiKey = builder.Configuration.GetValue<string>("Weather:ApiKey");
     (int status, string data) = await ApiHelper.GetOpenWeather(apiKey, posLat, posLong);
+    
+    
     return status == 200 ? Results.Content(data, "application/json") : Results.StatusCode(status);
+});
+
+//relax cookie policy
+app.UseCookiePolicy(new CookiePolicyOptions {
+    Secure = CookieSecurePolicy.None, // if in debug mode
+    MinimumSameSitePolicy = SameSiteMode.Unspecified
 });
 
 // Easy to miss this, starting the whole app and server!

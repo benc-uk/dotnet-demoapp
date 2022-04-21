@@ -1,4 +1,6 @@
 using System.Diagnostics;
+//app insights
+using Microsoft.ApplicationInsights;
 
 namespace DotnetDemoapp
 {
@@ -14,14 +16,26 @@ namespace DotnetDemoapp
             using var client = new HttpClient();
             var response = await client.SendAsync(request);
 
+            var telemetryClient = new TelemetryClient();
+
             if (response.IsSuccessStatusCode)
             {
                 return (200, await response.Content.ReadAsStringAsync());
+
+                //track event in Application Insights
+                
+                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() } });
             }
             else
             {
                 return (((int)response.StatusCode), null);
+
+                //track event in Application Insights
+                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() } });
+                
             }
+            //flush telemetry
+            telemetryClient.Flush();
         }
 
         public static async Task<double> GetCpuUsageForProcess()
