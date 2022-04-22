@@ -53,3 +53,4 @@ build/env.txt
 deploy/kubernetes/k8s-manifest/main.local.yml
 build/Dockerfile.local
 ingress-tls.key
+deploy/bicep/container-app.json

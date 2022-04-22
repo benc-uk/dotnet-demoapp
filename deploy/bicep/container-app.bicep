@@ -1,123 +1,53 @@
-// ============================================================================
-// Deploy a container app with app container environment and log analytics
-// ============================================================================
-
-@description('Name of container app')
-param appName string = 'srewithazure-containerapp'
-
-@description('Region to deploy into')
 param location string = resourceGroup().location
 
-@description('Container image to deploy')
-param image string = 'ghcr.io/benc-uk/dotnet-demoapp:latest'
-
+param appName string = 'srewithazure-containerapp'
+param environmentName string = '${appName}-environment'
+param logAnalyticsWorkspaceName string = '${appName}-logs'
+param image string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 // Azure Container registry
 @description('ACR password')
 @secure()
 param acrPassword string
 
 @description('ACR server')
-param acrServer string = 'srewithazure-acr.azurecr.io'
+param acrServer string = 'srewithazure.azurecr.io'
 
 @description('ACR username')
-param acrUsername string = 'srewithazure-acr'
+param acrUsername string = 'srewithazure'
 
-
-// @description('Optional feature: OpenWeather API Key')
-// param weatherApiKey string = ''
-
-// @description('Optional feature: Enable Azure App Insights')
-// param appInsightsInstrumentationKey string = ''
-
-// @description('Optional feature: Enable auth with Azure AD, client id')
-// param azureAdClientId string = ''
-// @description('Optional feature: Enable auth with Azure AD, client secret')
-// @secure()
-// param azureAdClientSecret string = ''
-// @description('Optional feature: Enable auth with Azure AD, tenant id')
-// param azureAdTenantId string = 'common'
-// @description('Optional feature: Enable auth with Azure AD, instance')
-// param azureAdInstance string = 'https://login.microsoftonline.com/'
-
-// ===== Variables ============================================================
-
-var logWorkspaceName = '${resourceGroup().name}-logs'
-var environmentName = '${resourceGroup().name}-environment'
-
-// ===== Modules & Resources ==================================================
-
-resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08-01' = {
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
+  name: logAnalyticsWorkspaceName
   location: location
-  name: logWorkspaceName
-  properties:{
-    sku:{
+  properties: any({
+    retentionInDays: 30
+    features: {
+      searchVersion: 1
+    }
+    sku: {
       name: 'PerGB2018'
     }
-  }
+  })
 }
 
-resource kubeEnv 'Microsoft.Web/kubeEnvironments@2021-02-01' = {
-  location: location
+resource environment 'Microsoft.App/managedEnvironments@2022-01-01-preview' = {
   name: environmentName
-  kind: 'containerenvironment'
-  
+  location: location
   properties: {
-    type: 'Managed'
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
-        customerId: logWorkspace.properties.customerId 
-        sharedKey: logWorkspace.listKeys().primarySharedKey
+        customerId: logAnalyticsWorkspace.properties.customerId
+        sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
       }
     }
   }
 }
 
-resource containerApp 'Microsoft.Web/containerApps@2021-03-01' = {
-  location: location
+resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
   name: appName
-
+  location: location
   properties: {
-    kubeEnvironmentId: kubeEnv.id
-    template: {
-      containers: [
-        {
-          image: image
-          name: appName
-          resources: {
-            cpu: json('0.25')
-            memory: '0.5Gi'
-          }
-          // env: [
-          //   {
-          //     name: 'Weather__ApiKey'
-          //     value: weatherApiKey
-          //   }
-          //   {
-          //     name: 'ApplicationInsights__InstrumentationKey'
-          //     value: appInsightsInstrumentationKey
-          //   }
-          //   {
-          //     name: 'AzureAd__ClientId'
-          //     value: azureAdClientId
-          //   }
-          //   {
-          //     name: 'AzureAd__ClientSecret'
-          //     secretRef: 'azure-ad-client-secret'
-          //   }
-          //   {
-          //     name: 'AzureAd__Instance'
-          //     value: azureAdInstance
-          //   }
-          //   {
-          //     name: 'AzureAd__TenantId'
-          //     value: azureAdTenantId
-          //   }
-          // ]
-        }
-      ]
-    }
-
+    managedEnvironmentId: environment.id
     configuration: {
       secrets: [
         {
@@ -129,18 +59,24 @@ resource containerApp 'Microsoft.Web/containerApps@2021-03-01' = {
         {
           server: acrServer
           username: acrUsername
-          passwordSecretRef: acrPassword
-        }
-      ]
+          passwordSecretRef: 'acr-acrPassword'
+        } 
+      ] 
       ingress: {
-        allowInsecure: true
         external: true
         targetPort: 5000
       }
+      
+    }
+    template: {
+      containers: [
+        {
+          image: image
+          name: appName
+        }
+      ]
     }
   }
 }
 
-// ===== Outputs ==============================================================
-
-output appURL string = 'https://${containerApp.properties.configuration.ingress.fqdn}'
+output fqdn string = containerApp.properties.configuration.ingress.fqdn
