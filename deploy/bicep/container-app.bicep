@@ -59,7 +59,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
         {
           server: acrServer
           username: acrUsername
-          passwordSecretRef: 'acr-acrPassword'
+          passwordSecretRef: 'acr-password'
         } 
       ] 
       ingress: {
