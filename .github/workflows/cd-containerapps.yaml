@@ -47,6 +47,6 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
-        template: deploy/bicep/main.bicep
+        template: deploy/bicep/container-app.bicep
         parameters: image={{env.ACR_REPO}}:{{ github.event.inputs.IMAGE_TAG }}
         failOnStdErr: false
