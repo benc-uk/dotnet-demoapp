@@ -85,11 +85,14 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Get latest ACA REVISION
+    - name: ECHO REVISION
+      run: echo "LatestRevision=$LatestRevision"
+
+    - name: Replace the BLUE/GREEN traffic and deactivate old version
       uses: azure/CLI@v1
       with:
         azcliversion: 2.35.0
         inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
           az containerapp ingress traffic set --name $ACA_NAME -g $RG --traffic-weight latest=100
-          echo $LatestRevision
           az containerapp revision deactivate --name $LatestRevision  --resource-group $RESOURCE_GROUP
