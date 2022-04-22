@@ -82,11 +82,21 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run:  make push
 
-      - name: "Trigger AKS release pipeline"
+      # - name: "Trigger AKS release pipeline"
+      #   if: github.ref == 'refs/heads/master'
+      #   uses: benc-uk/workflow-dispatch@v1
+      #   with:
+      #     workflow: "CD infra"
+      #     token: ${{ secrets.GH_PAT }}
+      #     # inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
+
+      - name: "Trigger ACA release pipeline"
         if: github.ref == 'refs/heads/master'
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: "CD infra"
+          workflow: "CD ACA"
           token: ${{ secrets.GH_PAT }}
-          # inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
+          inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
+      
+
 

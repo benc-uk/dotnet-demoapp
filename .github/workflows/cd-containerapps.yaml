@@ -1,0 +1,51 @@
+#
+# Deploy to Azure Container Apps
+# 
+#
+
+name: CD ACA
+
+on:
+  workflow_dispatch:
+    IMAGE_TAG:
+        description: "Image tag to be deployed"
+        required: true
+        default: "21-04-2022.1534"
+
+env:
+  CLUSTER_NAME: srewithazure-aks-unai
+  LOCATION: westeurope
+  ACR_REPO: srewithazure.azurecr.io/dotnet6 
+  RG: SREwithAzure
+  # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
+  # AD_CLIENT_ID: 3584ac39-1ab1-4fe6-a3dd-4b2fbedc9d7d
+
+jobs:
+  #
+  # Deploy AKS
+  #
+  deploy-azure:
+    name: Deploy Azure Container App to Azure Resource Group
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: AKS
+    steps:
+
+    # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy Bicep file
+    - name: deploy
+      if: github.event.inputs.SKIP_INFRA == 'No'
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
+        template: deploy/bicep/main.bicep
+        parameters: image={{env.ACR_REPO}}:{{ github.event.inputs.IMAGE_TAG }}
+        failOnStdErr: false

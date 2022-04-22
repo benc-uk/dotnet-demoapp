@@ -12,10 +12,10 @@ on:
         description: "Image tag to be deployed"
         required: true
         default: "12-04-2022.1352"
-      SKIP_INFRA:
-        description: "Skip infrastructure deployment in manual triggers"
-        required: false
-        default: "No"
+      # SKIP_INFRA:
+      #   description: "Skip infrastructure deployment in manual triggers"
+      #   required: false
+      #   default: "No"
   # workflow_run:
   #   workflows:
   #     - "CI Build App"

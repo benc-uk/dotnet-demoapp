@@ -15,9 +15,9 @@ service:
 ingress:
   enabled: true
   className: nginx
-  host: dotnet-demoapp.kube.unai.io
+  host: dotnet6.srewithazure.com
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   tls:
-    enabled: true
+    enabled: false
     secretName: unai-io-cert
