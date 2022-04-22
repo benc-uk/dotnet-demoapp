@@ -7,10 +7,11 @@ name: CD ACA
 
 on:
   workflow_dispatch:
-    IMAGE_TAG:
-        description: "Image tag to be deployed"
-        required: true
-        default: "21-04-2022.1534"
+    inputs:  
+        IMAGE_TAG:
+          description: "Image tag to be deployed"
+          required: true
+          default: "21-04-2022.1534"
 
 env:
   CLUSTER_NAME: srewithazure-aks-unai
