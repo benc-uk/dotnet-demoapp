@@ -31,6 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     # environment:
     #   name: AKS
+    #output for next job
+    outputs:
+      LatestRevision: ${{ steps.get-latest-aca-revision.outputs.LatestRevision }}
+
     steps:
 
     # Checkout code
@@ -43,14 +47,19 @@ jobs:
 
     - name: Get latest ACA REVISION
       uses: azure/CLI@v1
+      id: get-latest-aca-revision
       with:
         azcliversion: 2.35.0
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
           LatestRevision=$(az containerapp revision list -n $ACA_NAME -g $RG --query "[?properties.trafficWeight ==\`100\`][].name" --output tsv)
           echo "LatestRevision=$LatestRevision" >> $GITHUB_ENV
+          echo "::set-output name=LatestRevision::$LatestRevision"
+
     - name: ECHO REVISION
-      run: echo "LatestRevision=$LatestRevision"
+      run: |
+        echo "LatestRevision=$LatestRevision"
+        
 
       # Deploy Bicep file
     - name: deploy
@@ -62,16 +71,13 @@ jobs:
         template: deploy/bicep/container-app.bicep
         parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }} existingRevisionName=${{ env.LatestRevision }} newRevisionNumber=${{ github.event.inputs.IMAGE_TAG }}
         failOnStdErr: false
-    #output for next job
-    outputs:
-      LatestRevision: ${{ env.LatestRevision }}
-
+    
 
   # check GREEN deployment and witch with BLUE if working
   switch-blue-green:
     name: switch BLUE/GREEN deployment
     runs-on: ubuntu-latest
-    needs: [deploy-azure-green]
+    needs: deploy-azure-green
     environment:
       name: ACA
     
@@ -86,7 +92,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: ECHO REVISION
-      run: echo "LatestRevision=$LatestRevision"
+      run: echo ${{ needs.deploy-azure-green.outputs.LatestRevision }}
 
     - name: Replace the BLUE/GREEN traffic and deactivate old version
       uses: azure/CLI@v1
@@ -95,4 +101,4 @@ jobs:
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
           az containerapp ingress traffic set --name $ACA_NAME -g $RG --traffic-weight latest=100
-          az containerapp revision deactivate --name $LatestRevision  --resource-group $RESOURCE_GROUP
+          az containerapp revision deactivate --name ${{ needs.deploy-azure-green.outputs.LatestRevision }}  --resource-group $RESOURCE_GROUP
