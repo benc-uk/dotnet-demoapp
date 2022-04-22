@@ -4,11 +4,11 @@ name: Trigger auto deployment for containerapp srewithazure-containerapp
 on:
   # Automatically trigger it when detected changes in repo
   push:
-    branches: 
-      [ master ]
-    paths:
-    - '**'
-    - '.github/workflows/srewithazure-containerapp-AutoDeployTrigger-a59f6d09-f3f3-42a0-aa64-4f03d6b447ea.yml'
+    # branches: 
+    #   [ master ]
+    # paths:
+    # - '**'
+    # - '.github/workflows/srewithazure-containerapp-AutoDeployTrigger-a59f6d09-f3f3-42a0-aa64-4f03d6b447ea.yml'
 
   # Allow mannually trigger 
   workflow_dispatch:      
