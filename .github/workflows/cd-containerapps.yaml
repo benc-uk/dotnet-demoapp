@@ -42,7 +42,7 @@ jobs:
 
       # Deploy Bicep file
     - name: deploy
-      if: github.event.inputs.SKIP_INFRA == 'No'
+      #if: github.event.inputs.SKIP_INFRA == 'No'
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
