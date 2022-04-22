@@ -62,7 +62,6 @@ resource kubeEnv 'Microsoft.Web/kubeEnvironments@2021-02-01' = {
   kind: 'containerenvironment'
   
   properties: {
-    type: 'Managed'
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
