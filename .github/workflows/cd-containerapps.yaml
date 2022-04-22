@@ -18,14 +18,15 @@ env:
   LOCATION: westeurope
   ACR_REPO: srewithazure.azurecr.io/dotnet6 
   RG: SREwithAzure
+  ACA_NAME: srewithazure-containerapp
   # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
   # AD_CLIENT_ID: 3584ac39-1ab1-4fe6-a3dd-4b2fbedc9d7d
 
 jobs:
   #
-  # Deploy AKS
+  # Deploy Azure Container App
   #
-  deploy-azure:
+  deploy-azure-green:
     name: Deploy Azure Container App to Azure Resource Group
     runs-on: ubuntu-latest
     # environment:
@@ -40,6 +41,15 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Get latest ACA REVISION
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.35.0
+        inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+          LatestRevision=$(az containerapp revision list -n $ACA_NAME -g $RG --query "[?properties.trafficWeight ==\`100\`][].name" --output tsv)
+          echo "LatestRevision=$LatestRevision" >> $GITHUB_ENV
+
       # Deploy Bicep file
     - name: deploy
       #if: github.event.inputs.SKIP_INFRA == 'No'
@@ -48,5 +58,35 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
         template: deploy/bicep/container-app.bicep
-        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }}
+        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }} existingRevisionName=${{ env.LatestRevision }} newRevisionName=${{ env.IMAGE_TAG }}
         failOnStdErr: false
+    #output for next job
+    outputs:
+      LatestRevision: ${{ env.LatestRevision }}
+
+
+  # check GREEN deployment and witch with BLUE if working
+  switch-blue-green:
+    name: switch BLUE/GREEN deployment
+    runs-on: ubuntu-latest
+    environment:
+      name: ACA
+    
+    steps:
+
+    # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Get latest ACA REVISION
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.35.0
+        inlineScript: |
+          az containerapp ingress traffic set --name $ACA_NAME -g $RG --traffic-weight latest=100
+          echo $LatestRevision
+          az containerapp revision deactivate --name $LatestRevision  --resource-group $RESOURCE_GROUP

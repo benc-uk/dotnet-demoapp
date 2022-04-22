@@ -15,6 +15,12 @@ param acrServer string = 'srewithazure.azurecr.io'
 @description('ACR username')
 param acrUsername string = 'srewithazure'
 
+@description('existing revision name')
+param existingRevisionName string
+
+@description('New revision number')
+param newRevisionNumber string
+
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
   name: logAnalyticsWorkspaceName
   location: location
@@ -65,10 +71,23 @@ resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
       ingress: {
         external: true
         targetPort: 5000
+        traffic:[
+          {
+            latestRevision: true
+            weight: 0
+          }
+          {
+            latestRevision: false
+            revisionName: existingRevisionName
+            weight: 100
+          }
+        ]
       }
+      activeRevisionsMode:'multiple'
       
     }
     template: {
+      revisionSuffix: newRevisionNumber
       containers: [
         {
           image: image
@@ -80,3 +99,4 @@ resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
 }
 
 output fqdn string = containerApp.properties.configuration.ingress.fqdn
+output newRevisionName string = containerApp.properties.configuration.ingress.traffic[1].revisionName
