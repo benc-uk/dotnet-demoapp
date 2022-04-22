@@ -1,7 +1,7 @@
 param location string = resourceGroup().location
 
 param appName string = 'srewithazure-containerapp'
-param environmentName string = '${appName}-environment'
+param environmentName string = 'srewithazure-environment'
 param logAnalyticsWorkspaceName string = '${appName}-logs'
 param image string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 // Azure Container registry
