@@ -60,7 +60,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
         template: deploy/bicep/container-app.bicep
-        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }} existingRevisionName=${{ env.LatestRevision }} newRevisionNumber=${{ env.IMAGE_TAG }}
+        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }} existingRevisionName=${{ env.LatestRevision }} newRevisionNumber=${{ github.event.inputs.IMAGE_TAG }}
         failOnStdErr: false
     #output for next job
     outputs:
