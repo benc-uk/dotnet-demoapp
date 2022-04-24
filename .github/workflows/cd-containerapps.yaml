@@ -65,12 +65,18 @@ jobs:
     - name: deploy
       #if: github.event.inputs.SKIP_INFRA == 'No'
       uses: azure/arm-deploy@v1
+      id: deploy
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
         template: deploy/bicep/container-app.bicep
         parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }} existingRevisionName=${{ env.LatestRevision }} newRevisionNumber=${{ github.event.inputs.IMAGE_TAG }}
         failOnStdErr: false
+    
+    #echo new revision name
+    - name: echo new revision name
+      run: |
+        echo ${{steps.deploy.outputs.newRevisionName}}
     
 
   # check GREEN deployment and witch with BLUE if working
@@ -101,4 +107,4 @@ jobs:
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
           az containerapp ingress traffic set --name $ACA_NAME -g $RG --traffic-weight latest=100
-          az containerapp revision deactivate --name ${{ needs.deploy-azure-green.outputs.LatestRevision }}  --resource-group $RESOURCE_GROUP
+          az containerapp revision deactivate --name ${{ needs.deploy-azure-green.outputs.LatestRevision }}  --resource-group $RG
