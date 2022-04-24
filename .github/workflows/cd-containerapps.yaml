@@ -107,4 +107,4 @@ jobs:
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
           az containerapp ingress traffic set --name $ACA_NAME -g $RG --traffic-weight latest=100
-          az containerapp revision deactivate --name ${{ needs.deploy-azure-green.outputs.LatestRevision }}  --resource-group $RG
+          az containerapp revision deactivate --revision ${{ needs.deploy-azure-green.outputs.LatestRevision }}  --resource-group $RG
