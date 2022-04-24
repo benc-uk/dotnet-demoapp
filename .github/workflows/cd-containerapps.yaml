@@ -80,7 +80,7 @@ jobs:
       with:
         azcliversion: 2.35.0
         inlineScript: |
-          newRevisionNumber=az containerapp revision list -n $ACA_NAME -g $RG --query '[?properties.template.containers[0].image==`${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }}`][].name' --output tsv
+          newRevisionNumber=$(az containerapp revision list -n $ACA_NAME -g $RG --query '[?properties.template.containers[0].image==`${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }}`][].name' --output tsv)
           echo $newRevisionNumber
 
   # check GREEN deployment and witch with BLUE if working
