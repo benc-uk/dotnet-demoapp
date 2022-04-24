@@ -74,10 +74,14 @@ jobs:
         failOnStdErr: false
     
     #echo new revision name
-    - name: echo new revision name
-      run: |
-        echo ${{steps.deploy.outputs.newRevisionName}}
-    
+    - name: echo NEW revision name
+      uses: azure/CLI@v1
+        
+      with:
+        azcliversion: 2.35.0
+        inlineScript: |
+          newRevisionNumber=az containerapp revision list -n $ACA_NAME -g $RG --query '[?properties.template.containers[0].image==`${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }}`][].name' --output tsv
+          echo $newRevisionNumber
 
   # check GREEN deployment and witch with BLUE if working
   switch-blue-green:
