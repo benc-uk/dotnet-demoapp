@@ -92,7 +92,7 @@ jobs:
       #if: github.event.inputs.SKIP_INFRA == 'No'
       uses: azure/arm-deploy@v1
       if: steps.first-deployment.outputs.FirstDeployment == null
-      id: deploy
+      id: deploy-new
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
