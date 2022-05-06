@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 //                         })
 //                         .UseFeatureFlags());
 
-var endpoint="https://srewithazure-appconfig.azconfig.io";                     
+var endpoint="https://srewithazureunai-appconfig.azconfig.io";                     
 builder.Configuration.AddAzureAppConfiguration(options =>
                     options.Connect(new Uri(endpoint), new DefaultAzureCredential())
                         .ConfigureKeyVault(kv =>

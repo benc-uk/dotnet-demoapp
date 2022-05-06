@@ -25,10 +25,10 @@ on:
 # Note. Required secrets: CLUSTER_KUBECONFIG
 
 env:
-  CLUSTER_NAME: srewithazure-aks-unai
+  CLUSTER_NAME: srewithazureunai-aks-unai
   LOCATION: westeurope
-  ACR_NAME: srewithazure 
-  RG: SREwithAzure
+  ACR_NAME: srewithazureunai 
+  RG: srewithazureunai
   HELM_RELEASE: dotnet
   HELM_NAMESPACE: demoapps
   # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
@@ -139,7 +139,7 @@ jobs:
           $CLUSTER_DNS_ZONE=(az aks show --resource-group $RG --name $mycluster --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)
           # take Ip address dynamically and intro RG 
           EXTERNAL_IP=$(kubectl get service --namespace ingress-basic nginx-ingress-ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')          EXTERNAL_IP=$(kubectl get service --namespace ingress-basic nginx-ingress-ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-          az network dns record-set a add-record --resource-group mc_srewithazure_srewithazure-aks-unai_westeurope --zone-name $CLUSTER_DNS_ZONE --record-set-name "*" --ipv4-address $EXTERNAL_IP
+          az network dns record-set a add-record --resource-group mc_srewithazureunai_srewithazureunai-aks-unai_westeurope --zone-name $CLUSTER_DNS_ZONE --record-set-name "*" --ipv4-address $EXTERNAL_IP
 
       #configure cert manager
       - name: "Configure Cert-Manager" 

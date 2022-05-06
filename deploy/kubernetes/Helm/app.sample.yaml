@@ -4,7 +4,7 @@
 #
 
 image:
-  repository: srewithazure.azurecr.io/dotnet6
+  repository: srewithazureunai.azurecr.io/dotnet6
   tag: latest
   pullPolicy: Always
 

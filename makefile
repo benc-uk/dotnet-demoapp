@@ -1,5 +1,5 @@
 # Used by `image`, `push` & `deploy` targets, override as required
-IMAGE_REG ?= srewithazure.azurecr.io
+IMAGE_REG ?= srewithazureunai.azurecr.io
 IMAGE_REPO ?= dotnet6
 IMAGE_TAG ?= latest-local
 

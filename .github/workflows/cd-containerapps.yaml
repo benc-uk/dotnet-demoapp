@@ -14,11 +14,11 @@ on:
           default: "21-04-2022.1534"
 
 env:
-  CLUSTER_NAME: srewithazure-aks-unai
+  # CLUSTER_NAME: srewithazureunai-aks-unai
   LOCATION: westeurope
-  ACR_REPO: srewithazure.azurecr.io/dotnet6 
-  RG: SREwithAzure
-  ACA_NAME: srewithazure-containerapp
+  ACR_REPO: srewithazureunai.azurecr.io/dotnet6 
+  RG: srewithazure
+  ACA_NAME: srewithazureunai-containerapp
   # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
   # AD_CLIENT_ID: 3584ac39-1ab1-4fe6-a3dd-4b2fbedc9d7d
 

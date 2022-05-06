@@ -321,7 +321,7 @@
             "type": "Microsoft.Resources/deployments",
             "name": "ClusterMonitoringMetricPulisherRoleAssignmentDepl-20220412095433",
             "apiVersion": "2017-05-10",
-            "resourceGroup": "SREwithAzure",
+            "resourceGroup": "srewithazureunai",
             "subscriptionId": "dfd808dc-8a3f-4019-9c4d-9901ee75eca1",
             "properties": {
                 "mode": "Incremental",
@@ -334,18 +334,18 @@
                         {
                             "type": "Microsoft.ContainerService/managedClusters/providers/roleAssignments",
                             "apiVersion": "2018-01-01-preview",
-                            "name": "srewithazure-aks/Microsoft.Authorization/f4340940-1c51-4c3b-8591-afb6af835fbd",
+                            "name": "srewithazureunai-aks/Microsoft.Authorization/f4340940-1c51-4c3b-8591-afb6af835fbd",
                             "properties": {
                                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '3913510d-42f4-4e42-8a64-420c390055eb')]",
                                 "principalId": "[reference(parameters('resourceName')).addonProfiles.omsAgent.identity.objectId]",
-                                "scope": "/subscriptions/dfd808dc-8a3f-4019-9c4d-9901ee75eca1/resourceGroups/SREwithAzure/providers/Microsoft.ContainerService/managedClusters/srewithazure-aks"
+                                "scope": "/subscriptions/dfd808dc-8a3f-4019-9c4d-9901ee75eca1/resourceGroups/srewithazureunai/providers/Microsoft.ContainerService/managedClusters/srewithazureunai-aks"
                             }
                         }
                     ]
                 }
             },
             "dependsOn": [
-                "/subscriptions/dfd808dc-8a3f-4019-9c4d-9901ee75eca1/resourceGroups/SREwithAzure/providers/Microsoft.ContainerService/managedClusters/srewithazure-aks"
+                "/subscriptions/dfd808dc-8a3f-4019-9c4d-9901ee75eca1/resourceGroups/srewithazureunai/providers/Microsoft.ContainerService/managedClusters/srewithazureunai-aks"
             ]
         }
     ],

@@ -21,10 +21,10 @@ on:
 # Note. Required secrets: CLUSTER_KUBECONFIG
 
 env:
-  CLUSTER_NAME: srewithazure-aks-unai
+  CLUSTER_NAME: srewithazureunai-aks-unai
   LOCATION: westeurope
-  ACR_NAME: srewithazure 
-  RG: SREwithAzure
+  ACR_NAME: srewithazureunai 
+  RG: srewithazureunai
   # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
   # AD_CLIENT_ID: 3584ac39-1ab1-4fe6-a3dd-4b2fbedc9d7d
 

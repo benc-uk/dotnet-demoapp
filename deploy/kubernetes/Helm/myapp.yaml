@@ -4,7 +4,7 @@
 #
 
 image:
-  repository: srewithazure.azurecr.io/dotnet6
+  repository: srewithazureunai.azurecr.io/dotnet6
   tag: localv5
   pullPolicy: Always
 
@@ -15,7 +15,7 @@ service:
 ingress:
   enabled: true
   className: nginx
-  host: dotnet6.srewithazure.com
+  host: dotnet6.srewithazureunai.com
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   tls:

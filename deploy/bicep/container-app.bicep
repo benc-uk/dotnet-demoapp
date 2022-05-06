@@ -1,7 +1,7 @@
 param location string = resourceGroup().location
 
-param appName string = 'srewithazure-containerapp'
-param environmentName string = 'srewithazure-environment'
+param appName string = 'srewithazureunai-containerapp'
+param environmentName string = 'srewithazureunai-environment'
 param logAnalyticsWorkspaceName string = '${appName}-logs'
 param image string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 // Azure Container registry
@@ -10,10 +10,10 @@ param image string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:lates
 param acrPassword string
 
 @description('ACR server')
-param acrServer string = 'srewithazure.azurecr.io'
+param acrServer string = 'srewithazureunai.azurecr.io'
 
 @description('ACR username')
-param acrUsername string = 'srewithazure'
+param acrUsername string = 'srewithazureunai'
 
 @description('existing revision name')
 param existingRevisionName string
