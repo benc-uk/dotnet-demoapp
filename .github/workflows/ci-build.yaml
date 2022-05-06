@@ -64,9 +64,9 @@ jobs:
           tokenSuffix: '__'
           files: '["**/Dockerfile"]'
         env:
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}  
+          SP_AZURE_TENANT_ID: ${{ secrets.SP_AZURE_TENANT_ID }}
+          SP_AZURE_CLIENT_ID: ${{ secrets.SP_AZURE_CLIENT_ID }}
+          SP_AZURE_CLIENT_SECRET: ${{ secrets.SP_AZURE_CLIENT_SECRET }}  
       - name: 'Build and push image'
         uses: azure/docker-login@v1
         with:
