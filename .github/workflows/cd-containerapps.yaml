@@ -62,7 +62,7 @@ jobs:
     - name: Get latest ACA REVISION
       uses: azure/CLI@v1
       id: get-latest-aca-revision
-      if: steps.first-deployment.outputs.FirstDeployment != false
+      if: steps.first-deployment.outputs.FirstDeployment != 'false'
       with:
         azcliversion: 2.35.0
         inlineScript: |
@@ -72,7 +72,7 @@ jobs:
           echo "::set-output name=LatestRevision::$LatestRevision"
 
     - name: ECHO previous REVISION
-      if: steps.first-deployment.outputs.FirstDeployment != false
+      if: steps.first-deployment.outputs.FirstDeployment != 'false'
       run: |
         echo "LatestRevision=$LatestRevision"      
 
@@ -80,7 +80,7 @@ jobs:
     - name: deploy
       #if: github.event.inputs.SKIP_INFRA == 'No'
       uses: azure/arm-deploy@v1
-      if: steps.first-deployment.outputs.FirstDeployment != false
+      if: steps.first-deployment.outputs.FirstDeployment != 'false'
       id: deploy
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
@@ -93,7 +93,7 @@ jobs:
     - name: deploy NEW
       #if: github.event.inputs.SKIP_INFRA == 'No'
       uses: azure/arm-deploy@v1
-      if: steps.first-deployment.outputs.FirstDeployment == false
+      if: steps.first-deployment.outputs.FirstDeployment == 'false'
       id: deploy-new
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
@@ -110,7 +110,7 @@ jobs:
     name: switch BLUE/GREEN deployment
     runs-on: ubuntu-latest
     needs: deploy-azure-green
-    if: needs.deploy-azure-green.outputs.FirstDeployment != false
+    if: needs.deploy-azure-green.outputs.FirstDeployment != 'false'
     environment:
       name: ACA
     
