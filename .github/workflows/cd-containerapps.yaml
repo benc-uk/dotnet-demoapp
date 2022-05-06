@@ -34,6 +34,7 @@ jobs:
     #output for next job
     outputs:
       LatestRevision: ${{ steps.get-latest-aca-revision.outputs.LatestRevision }}
+      FirstDeployment: ${{ steps.first-deployment.outputs.FirstDeployment }}
 
     steps:
 
@@ -43,11 +44,23 @@ jobs:
       # Log into Azure
     - uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}  
+
+      #does the cluster exist, first deployment detect
+    - name: Get latest ACA REVISION
+      uses: azure/CLI@v1
+      id: first-deployment
+      with:
+        azcliversion: 2.35.0
+        inlineScript: |
+          FirstDeployment=$(az containerapp show -n $ACA_NAME -g $RG )
+          echo "FirstDeployment=$FirstDeployment" >> $GITHUB_ENV
+          echo "::set-output name=FirstDeployment::$FirstDeployment"
 
     - name: Get latest ACA REVISION
       uses: azure/CLI@v1
       id: get-latest-aca-revision
+      if: steps.first-deployment.outputs.FirstDeployment != null
       with:
         azcliversion: 2.35.0
         inlineScript: |
@@ -57,37 +70,45 @@ jobs:
           echo "::set-output name=LatestRevision::$LatestRevision"
 
     - name: ECHO REVISION
+      if: steps.first-deployment.outputs.FirstDeployment != null
       run: |
-        echo "LatestRevision=$LatestRevision"
-        
+        echo "LatestRevision=$LatestRevision"      
 
-      # Deploy Bicep file
+      # Deploy Bicep file (existing cluster)
     - name: deploy
       #if: github.event.inputs.SKIP_INFRA == 'No'
       uses: azure/arm-deploy@v1
+      if: steps.first-deployment.outputs.FirstDeployment != null
       id: deploy
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
         template: deploy/bicep/container-app.bicep
-        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }} existingRevisionName=${{ env.LatestRevision }} newRevisionNumber=${{ github.run_number }}
+        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }}  newRevisionNumber=${{ github.run_number }} existingRevisionName=${{env.LatestRevision}}
         failOnStdErr: false
     
-    #echo new revision name
-    # - name: echo NEW revision name
-    #   uses: azure/CLI@v1
-        
-    #   with:
-    #     azcliversion: 2.35.0
-    #     inlineScript: |
-    #       newRevisionNumber=$(az containerapp revision list -n $ACA_NAME -g $RG --query '[?properties.template.containers[0].image==`${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }}`][].name' --output tsv)
-    #       echo $newRevisionNumber
+     # Deploy Bicep file (new cluster)
+    - name: deploy
+      #if: github.event.inputs.SKIP_INFRA == 'No'
+      uses: azure/arm-deploy@v1
+      if: steps.first-deployment.outputs.FirstDeployment == null
+      id: deploy
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
+        template: deploy/bicep/container-app-new.bicep
+        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }}  newRevisionNumber=${{ github.run_number }}
+        failOnStdErr: false
+
+    
+    
 
   # check GREEN deployment and witch with BLUE if working
   switch-blue-green:
     name: switch BLUE/GREEN deployment
     runs-on: ubuntu-latest
     needs: deploy-azure-green
+    if: needs.deploy-azure-green.outputs.FirstDeployment != null
     environment:
       name: ACA
     
@@ -104,6 +125,7 @@ jobs:
     - name: ECHO REVISION
       run: echo ${{ needs.deploy-azure-green.outputs.LatestRevision }}
 
+    # only deactivate when another revision exists (after first deployment)
     - name: Replace the BLUE/GREEN traffic and deactivate old version
       uses: azure/CLI@v1
       with:
