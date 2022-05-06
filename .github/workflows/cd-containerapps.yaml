@@ -84,7 +84,7 @@ jobs:
       id: deploy
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
+        resourceGroupName: ${{ env.RG }}
         template: deploy/bicep/container-app.bicep
         parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }}  newRevisionNumber=${{ github.run_number }} existingRevisionName=${{env.LatestRevision}}
         failOnStdErr: false
@@ -97,7 +97,7 @@ jobs:
       id: deploy-new
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: ${{ ENV.RG }}
+        resourceGroupName: ${{ env.RG }}
         template: deploy/bicep/container-app-new.bicep
         parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }}  newRevisionNumber=${{ github.run_number }}
         failOnStdErr: false
