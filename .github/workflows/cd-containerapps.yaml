@@ -47,12 +47,13 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}  
 
       #does the cluster exist, first deployment detect
-    - name: Get latest ACA REVISION
+    - name: Get frist deployment BOOL
       uses: azure/CLI@v1
       id: first-deployment
       with:
         azcliversion: 2.35.0
         inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
           FirstDeployment=$(az containerapp show -n $ACA_NAME -g $RG )
           echo "FirstDeployment=$FirstDeployment" >> $GITHUB_ENV
           echo "::set-output name=FirstDeployment::$FirstDeployment"
