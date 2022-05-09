@@ -54,8 +54,9 @@ jobs:
         azcliversion: 2.35.0
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
+          empty_answer=[]
           check=$(az containerapp list --query "[?name=='$ACA_NAME']")
-          [ "$check"=="[]" ] && FirstDeployment=false
+          [ $check==$empty_answer ] && FirstDeployment=false || FirstDeployment=true
           echo "FirstDeployment=$FirstDeployment" >> $GITHUB_ENV
           echo "::set-output name=FirstDeployment::$FirstDeployment"
 
