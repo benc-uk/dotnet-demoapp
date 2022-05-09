@@ -93,10 +93,10 @@ app.MapGet("/api/weather/{posLat:double}/{posLong:double}", async (double posLat
 });
 
 //relax cookie policy
-app.UseCookiePolicy(new CookiePolicyOptions {
-    Secure = CookieSecurePolicy.None, // if in debug mode
-    MinimumSameSitePolicy = SameSiteMode.Unspecified
-});
+// app.UseCookiePolicy(new CookiePolicyOptions {
+//     Secure = CookieSecurePolicy.None, // if in debug mode
+//     MinimumSameSitePolicy = SameSiteMode.Unspecified
+// });
 
 // Easy to miss this, starting the whole app and server!
 app.Run();
