@@ -11,7 +11,7 @@ on:
         IMAGE_TAG:
           description: "Image tag to be deployed"
           required: true
-          default: "21-04-2022.1534"
+          default: "09-05-2022.2113"
 
 env:
   # CLUSTER_NAME: srewithazureunai-aks-unai
