@@ -12,7 +12,7 @@
   <ItemGroup>
     <!-- <PackageReference Include="Microsoft.Graph" Version="3.27.0" /> -->
     <PackageReference Include="Azure.Identity" Version="1.6.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.14" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20" />
     <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.5.1" />
     <PackageReference Include="Microsoft.Identity.Web" Version="1.21.0" />
