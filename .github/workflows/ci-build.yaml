@@ -2,7 +2,9 @@ name: CI Build App
 
 on:
   push:
-    branches: [master feature/*]
+    branches: 
+      - master 
+      - 'feature/**'
     paths:
       - "src/**"
       - "tests/**"
