@@ -20,22 +20,25 @@ namespace DotnetDemoapp
 
             if (response.IsSuccessStatusCode)
             {
-                return (200, await response.Content.ReadAsStringAsync());
+                
 
                 //track event in Application Insights
                 
-                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() } });
+                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() }, { "Api_key", apiKey } });
+                 //flush telemetry
+                telemetryClient.Flush();
+                return (200, await response.Content.ReadAsStringAsync());
             }
             else
             {
-                return (((int)response.StatusCode), null);
-
-                //track event in Application Insights
-                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() } });
                 
+                //track event in Application Insights
+                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() }, { "Api_key", apiKey } });
+                 //flush telemetry
+                telemetryClient.Flush();
+                return (((int)response.StatusCode), null);        
             }
-            //flush telemetry
-            telemetryClient.Flush();
+           
         }
 
         public static async Task<double> GetCpuUsageForProcess()
