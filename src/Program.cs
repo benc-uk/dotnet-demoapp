@@ -1,11 +1,15 @@
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using DotnetDemoapp;
+using DotnetDemoapp.Telemetry;
 //for SP and MSI
 using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.FeatureFilters;
+//app insights
+ using Microsoft.ApplicationInsights.Extensibility;
+ 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +37,7 @@ builder.Configuration.AddAzureAppConfiguration(options =>
 //var ai_key = builder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString");
 
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:ConnectionString"]);
+builder.Services.AddSingleton<ITelemetryInitializer, DotnetDemoapp.Telemetry.MyTelemetryInitializer>();
 
 // Make Azure AD auth an optional feature if the config is present
 if (builder.Configuration.GetSection("AzureAd").Exists() && builder.Configuration.GetSection("AzureAd").GetValue<String>("ClientId") != "")
