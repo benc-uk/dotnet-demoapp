@@ -35,9 +35,9 @@ builder.Configuration.AddAzureAppConfiguration(options =>
 //builder.Services.AddApplicationInsightsTelemetry();
 // UNAI log App Insights instrumentation Key
 //var ai_key = builder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString");
-
-builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:ConnectionString"]);
 builder.Services.AddSingleton<ITelemetryInitializer, DotnetDemoapp.Telemetry.MyTelemetryInitializer>();
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:ConnectionString"]);
+
 
 // Make Azure AD auth an optional feature if the config is present
 if (builder.Configuration.GetSection("AzureAd").Exists() && builder.Configuration.GetSection("AzureAd").GetValue<String>("ClientId") != "")
