@@ -1,6 +1,7 @@
 using System.Diagnostics;
 //app insights
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace DotnetDemoapp
 {
@@ -16,12 +17,11 @@ namespace DotnetDemoapp
             using var client = new HttpClient();
             var response = await client.SendAsync(request);
 
-            var telemetryClient = new TelemetryClient();
+            var telemetryClient = new TelemetryClient(TelemetryConfiguration.CreateDefault());
 
             if (response.IsSuccessStatusCode)
             {
                 
-
                 //track event in Application Insights
                 
                 telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() }, { "Api_key", apiKey } });
