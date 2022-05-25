@@ -40,7 +40,7 @@ builder.Services.Configure<TelemetryConfiguration>(
      (o) => {
        o.InstrumentationKey = builder.Configuration["ApplicationInsights:ConnectionString"];
      });
-builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:ConnectionString"]);
 
 
 // Make Azure AD auth an optional feature if the config is present
