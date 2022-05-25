@@ -17,7 +17,10 @@ namespace DotnetDemoapp
             using var client = new HttpClient();
             var response = await client.SendAsync(request);
 
-            var telemetryClient = new TelemetryClient(TelemetryConfiguration.CreateDefault());
+            var config=TelemetryConfiguration.CreateDefault();
+            config.ConnectionString=builder.Configuration["ApplicationInsights:ConnectionString"]
+
+            var telemetryClient = new TelemetryClient();
 
             if (response.IsSuccessStatusCode)
             {
