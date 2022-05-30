@@ -12,10 +12,19 @@ namespace DotnetDemoapp
     // These could probably be made into full HTTP handlers
     public class ApiHelper
     { 
+        // requires using Microsoft.Extensions.Configuration;
         private readonly IConfiguration Configuration;
 
-        public static async Task<(int, String)> GetOpenWeather(string apiKey, double posLat, double posLong, string appInsightsKey)
+        public ApiHelper(IConfiguration configuration)
         {
+            Configuration = configuration;
+        }
+
+        public  async Task<(int, String)> GetOpenWeather(string apiKey, double posLat, double posLong, string appInsightsKey)
+        {
+            //most recent apiKey
+            apiKey=Configuration["Weather:ApiKey"];
+
             // Call the OpenWeather API with provided lat & long
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.openweathermap.org/data/2.5/weather?lat={posLat}&lon={posLong}&appid={apiKey}&units=metric");
             // This is not the best way to use HttpClient, but good enough
