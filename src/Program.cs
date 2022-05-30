@@ -30,6 +30,11 @@ builder.Configuration.AddAzureAppConfiguration(options =>
                         {
                             kv.SetCredential(new DefaultAzureCredential());
                         })
+                        .ConfigureRefresh(refresh =>
+                        {
+                            refresh.Register("Refresh:Config", refreshAll: true)
+                                   .SetCacheExpiration(new TimeSpan(0, 5, 0));
+                        })
                         .UseFeatureFlags());
 
 
