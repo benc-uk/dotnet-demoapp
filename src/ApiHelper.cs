@@ -8,8 +8,10 @@ namespace DotnetDemoapp
     // Simple static methods to help with the API calls
     // These could probably be made into full HTTP handlers
     public class ApiHelper
-    {
-        public static async Task<(int, String)> GetOpenWeather(string apiKey, double posLat, double posLong)
+    { 
+        private readonly IConfiguration Configuration;
+
+        public static async Task<(int, String)> GetOpenWeather(string apiKey, double posLat, double posLong, string appInsightsKey)
         {
             // Call the OpenWeather API with provided lat & long
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.openweathermap.org/data/2.5/weather?lat={posLat}&lon={posLong}&appid={apiKey}&units=metric");
@@ -17,10 +19,12 @@ namespace DotnetDemoapp
             using var client = new HttpClient();
             var response = await client.SendAsync(request);
 
-            // var config=TelemetryConfiguration.CreateDefault();
-            // config.ConnectionString=appinsightskey;
+            var config=TelemetryConfiguration.CreateDefault();
+            config.ConnectionString=appInsightsKey;         
 
-            var telemetryClient = new TelemetryClient(TelemetryConfiguration.CreateDefault());
+            var telemetryClient = new TelemetryClient(config);
+
+            //var telemetryClient = new TelemetryClient(TelemetryConfiguration.CreateDefault());
 
             if (response.IsSuccessStatusCode)
             {

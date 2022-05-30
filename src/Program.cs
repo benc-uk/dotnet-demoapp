@@ -32,14 +32,10 @@ builder.Configuration.AddAzureAppConfiguration(options =>
                         })
                         .UseFeatureFlags());
 
-//builder.Services.AddApplicationInsightsTelemetry();
+
 // UNAI log App Insights instrumentation Key
 //var ai_key = builder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString");
 builder.Services.AddSingleton<ITelemetryInitializer, DotnetDemoapp.Telemetry.MyTelemetryInitializer>();
-builder.Services.Configure<TelemetryConfiguration>(
-     (o) => {
-       o.InstrumentationKey = builder.Configuration["ApplicationInsights:ConnectionString"];
-     });
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:ConnectionString"]);
 
 
@@ -95,7 +91,7 @@ app.MapGet("/api/monitor", async () =>
 app.MapGet("/api/weather/{posLat:double}/{posLong:double}", async (double posLat, double posLong) =>
 {
     string apiKey = builder.Configuration.GetValue<string>("Weather:ApiKey");
-    (int status, string data) = await ApiHelper.GetOpenWeather(apiKey, posLat, posLong);
+    (int status, string data) = await ApiHelper.GetOpenWeather(apiKey, posLat, posLong, builder.Configuration["ApplicationInsights:ConnectionString"] );
     
     
     return status == 200 ? Results.Content(data, "application/json") : Results.StatusCode(status);
