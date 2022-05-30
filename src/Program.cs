@@ -33,7 +33,7 @@ builder.Configuration.AddAzureAppConfiguration(options =>
                         .ConfigureRefresh(refresh =>
                         {
                             refresh.Register("Refresh:Config", refreshAll: true)
-                                   .SetCacheExpiration(new TimeSpan(0, 5, 0));
+                                   .SetCacheExpiration(new TimeSpan(0,0,10)); //10 seconds expiration
                         })
                         .UseFeatureFlags());
 
