@@ -3,6 +3,9 @@ using System.Diagnostics;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 
+//update azure app config  
+using Microsoft.Extensions.Options;
+
 namespace DotnetDemoapp
 {
     // Simple static methods to help with the API calls
