@@ -1,14 +1,20 @@
 using System.Diagnostics;
 //app insights
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
+
+//update azure app config  
+using Microsoft.Extensions.Options;
 
 namespace DotnetDemoapp
 {
     // Simple static methods to help with the API calls
     // These could probably be made into full HTTP handlers
     public class ApiHelper
-    {
-        public static async Task<(int, String)> GetOpenWeather(string apiKey, double posLat, double posLong)
+    { 
+        private readonly IConfiguration Configuration;
+
+        public static async Task<(int, String)> GetOpenWeather(string apiKey, double posLat, double posLong, string appInsightsKey)
         {
             // Call the OpenWeather API with provided lat & long
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.openweathermap.org/data/2.5/weather?lat={posLat}&lon={posLong}&appid={apiKey}&units=metric");
@@ -16,26 +22,33 @@ namespace DotnetDemoapp
             using var client = new HttpClient();
             var response = await client.SendAsync(request);
 
-            var telemetryClient = new TelemetryClient();
+            var config=TelemetryConfiguration.CreateDefault();
+            config.ConnectionString=appInsightsKey;         
+
+            var telemetryClient = new TelemetryClient(config);
+
+            //var telemetryClient = new TelemetryClient(TelemetryConfiguration.CreateDefault());
 
             if (response.IsSuccessStatusCode)
             {
-                return (200, await response.Content.ReadAsStringAsync());
-
+                
                 //track event in Application Insights
                 
-                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() } });
+                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() }, { "Api_key", apiKey } });
+                 //flush telemetry
+                telemetryClient.Flush();
+                return (200, await response.Content.ReadAsStringAsync());
             }
             else
             {
-                return (((int)response.StatusCode), null);
-
-                //track event in Application Insights
-                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() } });
                 
+                //track event in Application Insights
+                telemetryClient.TrackEvent("OpenWeather API call", new Dictionary<string, string> { { "lat", posLat.ToString() }, { "long", posLong.ToString() }, { "status", response.StatusCode.ToString() }, { "Api_key", apiKey } });
+                 //flush telemetry
+                telemetryClient.Flush();
+                return (((int)response.StatusCode), null);        
             }
-            //flush telemetry
-            telemetryClient.Flush();
+           
         }
 
         public static async Task<double> GetCpuUsageForProcess()

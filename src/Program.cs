@@ -1,11 +1,15 @@
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using DotnetDemoapp;
+using DotnetDemoapp.Telemetry;
 //for SP and MSI
 using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.FeatureFilters;
+//app insights
+ using Microsoft.ApplicationInsights.Extensibility;
+ 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,13 +30,19 @@ builder.Configuration.AddAzureAppConfiguration(options =>
                         {
                             kv.SetCredential(new DefaultAzureCredential());
                         })
+                        .ConfigureRefresh(refresh =>
+                        {
+                            refresh.Register("Refresh:Config", refreshAll: true)
+                                   .SetCacheExpiration(new TimeSpan(0,0,10)); //10 seconds expiration
+                        })
                         .UseFeatureFlags());
 
-//builder.Services.AddApplicationInsightsTelemetry();
+
 // UNAI log App Insights instrumentation Key
 //var ai_key = builder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString");
-
+builder.Services.AddSingleton<ITelemetryInitializer, DotnetDemoapp.Telemetry.MyTelemetryInitializer>();
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:ConnectionString"]);
+
 
 // Make Azure AD auth an optional feature if the config is present
 if (builder.Configuration.GetSection("AzureAd").Exists() && builder.Configuration.GetSection("AzureAd").GetValue<String>("ClientId") != "")
@@ -86,7 +96,7 @@ app.MapGet("/api/monitor", async () =>
 app.MapGet("/api/weather/{posLat:double}/{posLong:double}", async (double posLat, double posLong) =>
 {
     string apiKey = builder.Configuration.GetValue<string>("Weather:ApiKey");
-    (int status, string data) = await ApiHelper.GetOpenWeather(apiKey, posLat, posLong);
+    (int status, string data) = await ApiHelper.GetOpenWeather(apiKey, posLat, posLong, builder.Configuration["ApplicationInsights:ConnectionString"] );
     
     
     return status == 200 ? Results.Content(data, "application/json") : Results.StatusCode(status);
