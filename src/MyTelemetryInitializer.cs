@@ -14,8 +14,12 @@ namespace DotnetDemoapp.Telemetry
   {
     //Add custom property to all telemetry items
     public void Initialize(ITelemetry telemetry)
-    {// provide hosting environment info
-      telemetry.Context.GlobalProperties.Add("AzureHostingService", "Azure Container App");
+    {
+      // provide hosting environment info
+      // get App version from assembly info
+      var AppVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+      telemetry.Context.GlobalProperties.Add("AppVersion", AppVersion);
+      telemetry.Context.Cloud.RoleName = "ContainerApp-NET6-Website";
     }
 
   }
