@@ -1,3 +1,35 @@
+# Notes from Unai - SRE Book
+The following repo is used as a demo in the book **The Art of Site Reliability Engineering (SRE) with Azure**
+
+<img src="https://user-images.githubusercontent.com/64772417/204004573-e4793fe1-1e45-46ad-8e2f-96514ffb2429.png" width="250"/>
+
+## Demo Guide
+
+1. Create a Resource Group under your Azure subscription for your demo.
+  
+    `az group create --name myResourceGroup --location eastus`
+    
+1. Create an Azure Container Registry (ACR) to keep your .net container (later build and pushed with GitHub Actions. From Cloud Shell:
+
+    `az acr create --resource-group myResourceGroup --name yourcontainerregistry --sku Basic`
+
+1. Create an Azure Key Vaul resource. It will later keep secrets like the Weather API key. From Cloud Shell:
+
+    `az keyvault create --name your-unique-keyvault-name --resource-group myResourceGroup --location EastUS`
+
+1. To Test the Weather API calls in the App, you need to create an account in [Openweathermap](https://home.openweathermap.org/users/sign_up) and get an API Key
+
+    ![image](https://user-images.githubusercontent.com/64772417/204014383-2b2000fd-1a28-476b-b9db-02b8c336ae82.png)
+    
+1. Keep your **Openweathermap** API key as a secret in Azure Key Vault. 
+    ![image](https://user-images.githubusercontent.com/64772417/204014872-997e06d0-ec6f-4e6b-a1e8-c66c5b6adb4b.png)
+    
+1. Create a Service Principal that will be used as:
+    1. Identity used by the GH Action to deploy/update resources
+    1. Identity used by the .NET container to connect to Azure Key Vault and Azure App Configur
+
+
+
 # .NET - Demo Web Application
 
 This is a simple .NET web app using the new minimal hosting model, and Razor pages. It was created from the `dotnet new webapp` template and modified adding custom APIs, Bootstrap v5, Microsoft Identity and other packages/features.
