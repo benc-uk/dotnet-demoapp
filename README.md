@@ -64,8 +64,8 @@ The following repo is used as a demo in the book **The Art of Site Reliability E
 1. In the portal, open the created Azure App Configuration. Go to **Operations>Configuration Explorer** and create the following Key-Value pairs.
 
     - **Create > Key Vault reference** > key  **Weather:ApiKey** > Point to the previously  created secret (latest version). It references the value kept in Key Vault (safer place for sensitive information). 
-    - ** Create > key-value > key  **Refresh:Config** > Value **1** . We will use it as a boolean to control when settings should be refreshed by the app (check the Program.cs lines)
-    - **Create > key-value > Key **ApplicationInsights:ConnectionString** > Value **copied from previous steps**. It will be used to authenticate and collect telemetry in Azure. 
+    - **Create > key-value** > key  **Refresh:Config** > Value **1** . We will use it as a boolean to control when settings should be refreshed by the app (check the Program.cs lines)
+    - **Create > key-value** > Key **ApplicationInsights:ConnectionString** > Value **copied from previous steps**. It will be used to authenticate and collect telemetry in Azure. 
     
  1. In the portal, open the created Azure App Configuration. Go to **Operations>Feature Manager** and create the following feature flag, it will let us control the app behaviour without redeploy/restart needed:
  
