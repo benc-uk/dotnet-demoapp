@@ -14,13 +14,11 @@ on:
           default: "09-05-2022.2113"
 
 env:
-  # CLUSTER_NAME: srewithazureunai-aks-unai
   LOCATION: westeurope
-  ACR_REPO: srewithazureunai.azurecr.io/dotnet6 
-  RG: SREwithAzure
-  ACA_NAME: srewithazureunai-containerapp
-  # INGRESS_DNS_HOST: dotnet-demoapp.kube.benco.io
-  # AD_CLIENT_ID: 3584ac39-1ab1-4fe6-a3dd-4b2fbedc9d7d
+  ACR_REPO: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dotnet6 
+  RG: ${{ secrets.AZURE_RG }}
+  ACA_NAME: ${{ secrets.REGISTRY_USERNAME }}-containerapp
+  
 
 jobs:
   #
@@ -47,7 +45,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}  
 
       #does the cluster exist, first deployment detect
-    - name: Get frist deployment BOOL
+    - name: Get first deployment BOOL
       uses: azure/CLI@v1
       id: first-deployment
       with:
@@ -87,7 +85,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ env.RG }}
         template: deploy/bicep/container-app.bicep
-        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }}  newRevisionNumber=${{ github.run_number }} existingRevisionName=${{env.LatestRevision}}
+        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrServer=${{ secrets.REGISTRY_LOGIN_SERVER }} acrPassword=${{ secrets.REGISTRY_PASSWORD }}  acrUsername=${{ secrets.REGISTRY_USERNAME }}  newRevisionNumber=${{ github.run_number }} existingRevisionName=${{env.LatestRevision}} appName=${{ secrets.REGISTRY_USERNAME }}-containerapp environmentName=${{ secrets.REGISTRY_USERNAME }}-environment
         failOnStdErr: false
     
      # Deploy Bicep file (new cluster)
@@ -100,7 +98,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ env.RG }}
         template: deploy/bicep/container-app-new.bicep
-        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrPassword=${{ secrets.ACR_PASSWORD }}  newRevisionNumber=${{ github.run_number }}
+        parameters: image=${{env.ACR_REPO}}:${{ github.event.inputs.IMAGE_TAG }} acrServer=${{ secrets.REGISTRY_LOGIN_SERVER }}    acrPassword=${{ secrets.REGISTRY_PASSWORD }}  acrUsername=${{ secrets.REGISTRY_USERNAME }}  newRevisionNumber=${{ github.run_number }} appName=${{ secrets.REGISTRY_USERNAME }}-containerapp environmentName=${{ secrets.REGISTRY_USERNAME }}-environment
         failOnStdErr: false
 
     
@@ -136,4 +134,4 @@ jobs:
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
           az containerapp ingress traffic set --name $ACA_NAME -g $RG --traffic-weight latest=100
-          az containerapp revision deactivate --revision ${{ needs.deploy-azure-green.outputs.LatestRevision }}  --resource-group $RG
+          
