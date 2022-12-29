@@ -97,7 +97,6 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: "CD ACA"
-          token: ${{ secrets.GH_PAT }}
           inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
       
 
