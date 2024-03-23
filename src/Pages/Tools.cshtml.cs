@@ -1,69 +1,74 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-public class ToolsModel : PageModel
+namespace DotnetDemoapp.Pages
 {
-    public string message { get; private set; } = "";
-
-    // Multi purpose controller method, 
-    // Couldn't find a way to do this with routes/annotations in Razor Pages
-    public void OnGet(string action, int value)
+    public class ToolsModel : PageModel
     {
-        // Run the garbage collector
-        if (action == "gc")
-        {
-            System.GC.Collect();
-            message = "Garbage collection was run";
-        }
+        public string Message { get; private set; } = "";
 
-        // Try to allocate some memory
-        if (action == "alloc")
+        // Multi purpose controller method, 
+        // Couldn't find a way to do this with routes/annotations in Razor Pages
+        public void OnGet(string action, int value)
         {
-            int MB_SIZE = 50;
-            if (value > 0)
+            // Run the garbage collector
+            if (action == "gc")
             {
-                MB_SIZE = value;
+                GC.Collect();
+                Message = "Garbage collection was run";
             }
 
-            try
+            // Try to allocate some memory
+            if (action == "alloc")
             {
-                double[] stringArray = new double[MB_SIZE * 1024 * 1000];
-                message = "Allocated array with space for " + (MB_SIZE * 1024 * 1000) + " doubles";
-            }
-            catch (Exception ex)
-            {
-                message = "Failed " + ex.ToString();
-            }
-        }
+                var MB_SIZE = 50;
+                if (value > 0)
+                {
+                    MB_SIZE = value;
+                }
 
-        // Just throw an exception
-        if (action == "exception")
-        {
-            throw new System.InvalidOperationException("Cheese not found");
-        }
-
-        // Force some CPU load in a loop
-        if (action == "load")
-        {
-            double time;
-            long loops;
-            const double pow_base = 9000000000;
-            const double pow_exponent = 9000000000;
-            const int default_loops = 20;
-
-            Stopwatch sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-            loops = default_loops;
-            if (value > 0) loops = value;
-
-            double res;
-            for (var i = 0; i <= loops * 1000000; i++)
-            {
-                res = Math.Pow(pow_base, pow_exponent);
+                try
+                {
+                    var stringArray = new double[MB_SIZE * 1024 * 1000];
+                    Message = "Allocated array with space for " + (MB_SIZE * 1024 * 1000) + " doubles";
+                }
+                catch (Exception ex)
+                {
+                    Message = "Failed " + ex.ToString();
+                }
             }
 
-            time = sw.ElapsedMilliseconds / 1000.0;
-            message = $"I calculated a really big number {loops} million times! It took {time} seconds!";
+            // Just throw an exception
+            if (action == "exception")
+            {
+                throw new InvalidOperationException("Cheese not found");
+            }
+
+            // Force some CPU load in a loop
+            if (action == "load")
+            {
+                double time;
+                long loops;
+                const double pow_base = 9000000000;
+                const double pow_exponent = 9000000000;
+                const int default_loops = 20;
+
+                var sw = new Stopwatch();
+                sw.Start();
+                loops = default_loops;
+                if (value > 0)
+                {
+                    loops = value;
+                }
+
+                for (var i = 0; i <= loops * 1000000; i++)
+                {
+                    _ = Math.Pow(pow_base, pow_exponent);
+                }
+
+                time = sw.ElapsedMilliseconds / 1000.0;
+                Message = $"I calculated a really big number {loops} million times! It took {time} seconds!";
+            }
         }
     }
 }

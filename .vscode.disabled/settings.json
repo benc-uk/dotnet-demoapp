@@ -1,0 +1,15 @@
+{
+  "[csharp]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true
+    },
+    "editor.defaultFormatter": "ms-dotnettools.csharp"
+  },
+
+  "omnisharp.enableRoslynAnalyzers": true,
+  "omnisharp.useModernNet": true,
+  "omnisharp.enableEditorConfigSupport": true,
+  "omnisharp.analyzeOpenDocumentsOnly": true,
+  "dotnet.defaultSolution": "dotnet-demoapp.sln"
+}

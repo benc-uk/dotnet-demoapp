@@ -22,8 +22,10 @@ help: ## 💬 This help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 lint: ## 🔎 Lint & format, will not fix but sets exit code on error 
-	@dotnet format --help > /dev/null 2> /dev/null || dotnet tool install --global dotnet-format
-	dotnet format --verbosity diag ./src
+	dotnet format --verbosity detailed --verify-no-changes ./src
+
+lint-fix: ## 🌟 Lint & format, will try to fix code
+	dotnet format --verbosity detailed ./src
 
 image: ## 🔨 Build container image from Dockerfile 
 	docker build . --file build/Dockerfile \

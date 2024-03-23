@@ -8,7 +8,8 @@
   @if (User.Identity.IsAuthenticated)
     {
       <a href="/user" class="btn btn-info btn-lg" type="button"><i class="fas fa-fw fa-user-circle"></i>
-        @User.Identity.Name</a>
+      @User.Identity.Name
+      </a>
     }
     else
     {

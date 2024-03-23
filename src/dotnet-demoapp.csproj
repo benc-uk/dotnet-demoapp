@@ -4,8 +4,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>DotnetDemoapp</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
+ 
+     <Version>1.5.0</Version>
 
-    <Version>1.5.0</Version>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

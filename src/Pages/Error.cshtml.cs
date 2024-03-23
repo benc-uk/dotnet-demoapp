@@ -1,7 +1,6 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace DotnetDemoapp.Pages
 {
@@ -12,11 +11,8 @@ namespace DotnetDemoapp.Pages
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-        private readonly ILogger<ErrorModel> _logger;
-
-        public ErrorModel(ILogger<ErrorModel> logger)
+        public ErrorModel()
         {
-            _logger = logger;
         }
 
         public void OnGet()

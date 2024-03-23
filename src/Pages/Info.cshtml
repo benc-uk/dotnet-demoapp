@@ -11,7 +11,7 @@
     <table class="table table-hover table-striped table">
       <tr>
         <td><i class="fa fa-fw fa-cube"></i> Containerized:</td>
-        @if (Model.isInContainer)
+        @if (Model.IsInContainer)
         {
           <td>Looks like we're running in a Docker container! &#x1F604;</td>
         }
@@ -22,7 +22,7 @@
       </tr>
       <tr>
         <td><i class="fa fa-fw fa-project-diagram"></i> Kubernetes:</td>
-        @if (Model.isInKubernetes)
+        @if (Model.IsInKubernetes)
         {
           <td>We're also running in a Kubernetes pod! &#x1f44d;</td>
         }
@@ -33,7 +33,7 @@
       </tr>
       <tr>
         <td><i class="fa fa-fw fa-microscope"></i> App Insights:</td>
-        @if (Model.isAppInsightsEnabled)
+        @if (Model.IsAppInsightsEnabled)
         {
           <td>Reporting telemetry to Azure Application Insights</td>
         }
@@ -44,23 +44,23 @@
       </tr>
       <tr>
         <td><i class="fa fa-fw fa-home"></i> Hostname:</td>
-        <td>@Model.hostname</td>
+        <td>@Model.Hostname</td>
       </tr>
       <tr>
         <td><i class="fas fa-fw fa-cogs"></i> OS Details:</td>
-        <td>@Model.osDesc</td>
+        <td>@Model.OsDesc</td>
       </tr>
       <tr>
         <td><i class="fa fa-fw fa-microchip"></i> Architecture:</td>
-        <td>@Model.osArch - @Model.processorCount cores</td>
+        <td>@Model.OsArch - @Model.ProcessorCount cores</td>
       </tr>
       <tr>
         <td><i class="fab fa-fw fa-codepen"></i> Framework:</td>
-        <td>@Model.framework</td>
+        <td>@Model.Framework</td>
       </tr>
       <tr>
         <td><i class="fas fa-fw fa-memory"></i> Memory:</td>
-        <td>@Model.workingSet MB / @String.Format("{0,12:n} MB", Model.physicalMem)</td>
+        <td>@Model.WorkingSet MB / @String.Format("{0,12:n} MB", Model.PhysicalMem)</td>
       </tr>
     </table>
 
@@ -70,7 +70,7 @@
 
     <table class="table text-success bg-dark env-table">
       <tbody>
-        @foreach (KeyValuePair<string, string> var in @Model.envVars)
+        @foreach (KeyValuePair<string, string> var in @Model.EnvVars)
         {
           @if (var.Key == "PATH") continue;
           <tr>
