@@ -55,4 +55,4 @@ steps:
           -version $(Build.BuildId) `
           -selectedpreviously true `
           -scantimeout 30 `
-          -filepath 'verascan'
+          -filepath '../verascan'
