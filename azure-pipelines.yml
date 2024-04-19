@@ -13,13 +13,13 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $veracodeWrapperUrl = "https://tools.veracode.com/veracode-cli/install.ps1"
+      $veracodeCLIUrl = "https://tools.veracode.com/veracode-cli/install.ps1"
 
       # Enable Powershell to run scripts
       Set-ExecutionPolicy AllSigned -Scope Process -Force
 
       # Download the Veracode CLI
-      $ProgressPreference = "silentlyContinue"; iex ((New-Object System.Net.WebClient).DownloadString($veracodeWrapperUrl))
+      $ProgressPreference = "silentlyContinue"; iex ((New-Object System.Net.WebClient).DownloadString($veracodeCLIUrl))
 
       # Run autopackage, placing files in verascan
       veracode package --source ./ --output ./verascan --trust
