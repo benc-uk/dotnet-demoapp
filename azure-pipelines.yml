@@ -1,0 +1,58 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: PowerShell@2
+  displayName: Veracode Package
+  env:
+    VERACODE_API_KEY_ID: $(VERACODE_API_ID)
+    VERACODE_API_KEY_SECRET: $(VERACODE_API_KEY)
+  inputs:
+    targetType: 'inline'
+    script: |
+      $veracodeWrapperUrl = "https://tools.veracode.com/veracode-cli/install.ps1"
+
+      # Enable Powershell to run scripts
+      Set-ExecutionPolicy AllSigned -Scope Process -Force
+
+      # Download the Veracode CLI
+      $ProgressPreference = "silentlyContinue"; iex ((New-Object System.Net.WebClient).DownloadString($veracodeWrapperUrl))
+
+      # Run autopackage, placing files in verascan
+      veracode package --source ./ --output ./verascan --trust
+
+- task: PowerShell@2
+  displayName: Veracode Policy Scan
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Define variables
+      $veracodeWrapperUrl = "https://tools.veracode.com/integrations/API-Wrappers/CSharp/bin/VeracodeCSharpAPI.zip"
+      $veracodeWrapperZip = "VeracodeCSharpAPI.zip"
+      $veracodeWrapperDir = "VeracodeCSharpAPI"
+      $veracodeAppID = "DotNet Demo App"
+      $veracodeSandboxID = "YOUR_VERACODE_SANDBOX_ID"
+
+      # Download Veracode C# API wrapper
+      Invoke-WebRequest -Uri $veracodeWrapperUrl -OutFile $veracodeWrapperZip
+
+      # Extract Veracode C# API wrapper
+      Expand-Archive -Path $veracodeWrapperZip -DestinationPath $veracodeWrapperDir
+
+      # Navigate to Veracode C# API wrapper directory
+      cd $veracodeWrapperDir
+
+      # Run Veracode static analysis using the wrapper
+      .\VeracodeC#API.exe -action uploadandscan `
+          -vid $(VERACODE_API_ID) `
+          -vkey $(VERACODE_API_KEY) `
+          -appname $veracodeAppID `
+          -createprofile true `
+          -criticality High `
+          -version $(Build.BuildId) `
+          -selectedpreviously true `
+          -scantimeout 30 `
+          -filepath 'verascan'
